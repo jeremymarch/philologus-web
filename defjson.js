@@ -122,7 +122,7 @@ function setWord(json, status) {
   }
   attr += escape(lemma);
   attr += "' style='color:blue;'>entry</a> courtesy of the<br/>";
-  attr += "<a href='http://www.perseus.tufts.edu' style='color:blue;'><img alt='' src='images/new-rm-logo2.gif' height='25' width='25' style='vertical-align: middle; border: 0;'/>Perseus Digital Library</a>";
+  attr += "<a href='http://www.perseus.tufts.edu' style='color:blue;'><img alt='' src='" + getPathBeforeLexicon(window.location.pathname) + "images/new-rm-logo2.gif' height='25' width='25' style='vertical-align: middle; border: 0;'/>Perseus Digital Library</a>";
   attr += "</div>";
   //attr += "</div>";
 
@@ -141,33 +141,34 @@ function setWord(json, status) {
     if (history && typeof(history.pushState) == "function") {
       
 	    var ee = window.location.pathname;
+      
+      //add lexicon and word to path
+      history.pushState([id, lexicon], wordid, getPathBeforeLexicon(ee) + lexicon + '/' + wordid);
+    }
+  }
+}
 
+function getPathBeforeLexicon(ee) {
       //get path before any lsj/ls/slater; this makes it work on subdirectories
       var phPath = "";
       var a = ee.indexOf("/lsj");
       if (a > -1) {
-        phPath = ee.substring(0,a) + "/";
+        phPath = ee.substring(0, a) + "/";
       }
       else {
         var a = ee.indexOf("/ls");
         if (a > -1) {
-          phPath = ee.substring(0,a) + "/";
+          phPath = ee.substring(0, a) + "/";
         }
         else {
           var a = ee.indexOf("/slater");
           if (a > -1) {
-            phPath = ee.substring(0,a) + "/";
+            phPath = ee.substring(0, a) + "/";
           }        
         }     
       }
       //console.log(phPath);
-      
-      //add lexicon and word to path
-      history.pushState([id, lexicon], wordid, phPath + lexicon + '/' + wordid);
-    }
-  }
-
-
+      return phPath;
 }
 
 function makeQueryString(paramsObj) {

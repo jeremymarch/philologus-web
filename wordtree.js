@@ -234,13 +234,7 @@ function wordtree (idPrefix, width, height)
     
     this.closedNodeImg = "images/plus.gif";
     this.openNodeImg = "images/minus.gif";
-    /*
-    //make another case here for safari 1.3.2 where we block it from being called twice somehow
-    if ((browser == "firefox" && (platform == "mac" || platform == "linux")) || browser == "opera")
-    {
-        input.onkeypress = wordtree_ondown_firefox_mac;
-    }
-    */
+
     input.onkeydown = wordtree_ondown;
     input.onkeyup = wordtree_onup;
 
@@ -586,96 +580,6 @@ function wordtree (idPrefix, width, height)
         }        
     }
 
-    function wordtree_ondown_firefox_mac(ev)
-    {
-        if (!ev)
-            ev = window.event;
-            
-        var key = ev.keyCode;
-        
-        var match = /(.*)Entry/.exec(this.id);
-        if (!match)
-            return;
-        var idPrefix = match[1];
-        
-        var wt = lookupWT(idPrefix);
-        if (!wt)
-            return;         
-            
-        if (key == 39) //right arrow: open row
-        {
-        	if (wt.selectedRow && wt.selectedRow.id)
-        	{
-        		//first open this row
-        		if (!openNode(wt, wt.selectedRow.id))
-        		{
-        			//on second key press open row's children
-        			wt.openAllNodes(wt.selectedRow.nextSibling);
-        		}
-        	}
-        }
-        else if (key == 37) //left arrow: close row
-        {
-        	if (wt.selectedRow && wt.selectedRow.id)
-        	{
-        		closeNode(wt, wt.selectedRow.id);
-        		wt.closeAllNodes(wt.selectedRow.nextSibling);
-        		/*
-        		if (!closeNode(wt, wt.selectedRow.id))
-        		{
-        			wt.closeAllNodes(wt.selectedRow.nextSibling);
-        		}
-        		*/
-        	}
-        }   
-        else if (key == 38)
-        {
-        	if (wt.scrollTimer)
-        	{
-            	if (!wt.scrollTimerKeyDown)
-            	{
-            		if (!wt.scrollTimerTimeout && wt.step > 1)
-                		wt.scrollTimerTimeout = setTimeout(function () {wt.scrollTimerKeyDown = true;move(1, wt, wt.step); }, wt.scrollTimerDelay);
-
-                	move(1, wt, wt.step);
-                }   
-            }
-            else
-            {
-            	move(1, wt, wt.step);
-            	//accelerate
-				if (!wt.downkey)
-				{
-					wt.accelTimeout = setTimeout("var a = lookupWT('" + wt.idPrefix + "'); a.step = 2; a.accelTimeout = setTimeout(\"lookupWT('test1').step = keyScrollAccel\", 2000)", 2000);
-				}
-            }
-        }
-        else if (key == 40)
-        {
-        	if (wt.scrollTimer)
-        	{
-            	if (!wt.scrollTimerKeyDown)
-            	{
-            		if (!wt.scrollTimerTimeout && wt.step > 1)
-                		wt.scrollTimerTimeout = setTimeout(function () {wt.scrollTimerKeyDown = true;move(-1, wt, wt.step); }, wt.scrollTimerDelay);
-
-                	move(-1, wt, wt.step);
-                }   
-            }
-            else
-            {
-            	move(-1, wt, wt.step);
-            	//accelerate
-				if (!wt.downkey)
-				{
-					wt.accelTimeout = setTimeout("var a = lookupWT('" + wt.idPrefix + "'); a.step = 2; a.accelTimeout = setTimeout(\"lookupWT('test1').step = keyScrollAccel\", 2000)", 2000);
-				}
-            }
-        }
-
-        wt.downkey = true;
-    }
-
     function wordtree_ondown(ev)
     {
         if (!ev)
@@ -861,6 +765,7 @@ function wordtree (idPrefix, width, height)
         }
         //if (browser != "firefox" || platform == "windows")
         wt.downkey = true;
+        return transliterateKey(ev);
     }
 
     function move(upDown, wt, step)

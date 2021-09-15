@@ -174,7 +174,7 @@
           if (typeof ev.preventDefault == "function")
             ev.preventDefault();
         }
-        if (key == 50) //2
+        else if (key == 50) //2
         {
           switchLex(1);
           //block default hot keys, like bookmark, etc
@@ -182,7 +182,7 @@
           if (typeof ev.preventDefault == "function")
             ev.preventDefault();
         }
-        if (key == 51) //3
+        else if (key == 51) //3
         {
           switchLex(2);
           //block default hot keys, like bookmark, etc
@@ -190,7 +190,7 @@
           if (typeof ev.preventDefault == "function")
             ev.preventDefault();
         }
-        if (key == 52) //4
+        else if (key == 52) //4
         {
           document.getElementById("test2Entry").focus();
           //block default hot keys, like bookmark, etc
@@ -198,7 +198,7 @@
           if (typeof ev.preventDefault == "function")
             ev.preventDefault();
         }
-        if (key == 53) //5
+        else if (key == 53) //5
         {
           toggleTagChooser();
           //block default hot keys, like bookmark, etc
@@ -410,6 +410,46 @@
         a.style.display = 'none';
       }
     }
+
+var la = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+var gr = ["α","β","ψ","δ","ε","φ","γ","η","ι","ξ","κ","λ","μ","ν","ο","π","","ρ","σ","τ","θ","ω","ς","χ","υ","ζ","Α","Β","Ψ","Δ","Ε","Φ","Γ","Η","Ι","Ξ","Κ","Λ","Μ","Ν","Ο","Π","","Ρ","Σ","Τ","Θ","Ω","Σ","Χ","Υ","Ζ"];
+var forceLowercase = true;
+function transliterate(char)
+{
+    var theChar = (forceLowercase) ? char.toLowerCase() : char;
+    var idx = la.indexOf(theChar);
+    if (idx > -1) {
+        return gr[idx];
+    }
+    else {
+        return char;
+    }
+}
+
+function transliterateKey(evt) {
+    //var val = this.value;
+    evt = evt || window.event;
+    var source = evt.target || evt.srcElement;
+    var val = source.value;
+    console.log("val: " + val);
+    var charCode = typeof(evt.which) == "number" ? evt.which : evt.keyCode;
+
+    if (charCode && charCode > 64 && charCode < 123) //letter
+    {
+        var start = source.selectionStart;
+        var end = source.selectionEnd;
+        var key = String.fromCharCode(charCode);
+
+        var mappedChar = transliterate(key);
+        var charsToReplace = 0;
+        source.value = val.slice(0, start - charsToReplace) + mappedChar + val.slice(end);
+        // Move the caret
+        source.selectionStart = source.selectionEnd = start + 1 - charsToReplace;
+        return false;
+    }
+    return true;
+}
+
 
     var tagsOpen = false;
     var vIsLoggedIn = false;

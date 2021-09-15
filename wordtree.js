@@ -418,12 +418,14 @@ function wordtree (idPrefix, width, height)
         
         //this = the container element
         var match = /(.*)Container/.exec(this.id);
-        if (!match)
+        if (!match) {
             return;
+        }
 
         var wt = lookupWT(match[1]);
-        if (!wt)
+        if (!wt) {
             return;
+        }
         //don't request another page if we're on the last page OR if another nextPageRequest is pending.
         //don't increase page until it is received and appropriate
         if (wt.con.scrollTop > wt.con.scrollHeight - wt.con.offsetHeight - whenToGetNextPage && !wt.nextPageRequestPending && !wt.lastPage && !wt.blockScroll)
@@ -586,81 +588,78 @@ function wordtree (idPrefix, width, height)
             return;
         }
             
-        //if ((browser != "firefox" && browser != "opera") || (platform == "windows" && browser != "opera"))
-        if (true)
-        {         
-			if (key == 39) //right arrow: open row
+       
+		if (key == 39) //right arrow: open row
+		{
+			if (wt.selectedRow && wt.selectedRow.id)
 			{
-				if (wt.selectedRow && wt.selectedRow.id)
+				//first open row
+				if (!openNode(wt, wt.selectedRow.id))
 				{
-					//first open row
-					if (!openNode(wt, wt.selectedRow.id))
-					{
-						//on second key press open row's children
-						wt.openAllNodes(wt.selectedRow.nextSibling);
-					}
+					//on second key press open row's children
+					wt.openAllNodes(wt.selectedRow.nextSibling);
 				}
 			}
-			else if (key == 37) //left arrow: close row
+		}
+		else if (key == 37) //left arrow: close row
+		{
+			if (wt.selectedRow && wt.selectedRow.id)
 			{
-				if (wt.selectedRow && wt.selectedRow.id)
+			    closeNode(wt, wt.selectedRow.id);
+    			wt.closeAllNodes(wt.selectedRow.nextSibling);
+    			/*
+				if (!closeNode(wt, wt.selectedRow.id))
 				{
-				    closeNode(wt, wt.selectedRow.id);
-        			wt.closeAllNodes(wt.selectedRow.nextSibling);
-        			/*
-					if (!closeNode(wt, wt.selectedRow.id))
-					{
-						wt.closeAllNodes(wt.selectedRow.nextSibling);
-					}
-					*/
+					wt.closeAllNodes(wt.selectedRow.nextSibling);
 				}
+				*/
 			}
-            else if (key == 38)
-            {
-				if (wt.scrollTimer)
+		}
+        else if (key == 38)
+        {
+			if (wt.scrollTimer)
+			{
+				if (!wt.scrollTimerKeyDown)
 				{
-					if (!wt.scrollTimerKeyDown)
-					{
-						if (!wt.scrollTimerTimeout && wt.step > 1)
-							wt.scrollTimerTimeout = setTimeout(function () { wt.scrollTimerKeyDown = true;move(1, wt, wt.step); }, wt.scrollTimerDelay);
-	
-						move(1, wt, wt.step);
-					}   
-				}
-				else
-				{
+					if (!wt.scrollTimerTimeout && wt.step > 1)
+						wt.scrollTimerTimeout = setTimeout(function () { wt.scrollTimerKeyDown = true;move(1, wt, wt.step); }, wt.scrollTimerDelay);
+
 					move(1, wt, wt.step);
-					//accelerate
-					if (!wt.downkey)
-					{
-						wt.accelTimeout = setTimeout("var a = lookupWT('" + wt.idPrefix + "'); a.step = 2; a.accelTimeout = setTimeout(\"lookupWT('test1').step = keyScrollAccel\", 2000)", 2000);
-					}
-				}         
+				}   
 			}
-            else if (key == 40)
-            {
-				if (wt.scrollTimer)
+			else
+			{
+				move(1, wt, wt.step);
+				//accelerate
+				if (!wt.downkey)
 				{
-					if (!wt.scrollTimerKeyDown)
-					{
-						if (!wt.scrollTimerTimeout && wt.step > 1)
-							wt.scrollTimerTimeout = setTimeout(function () { wt.scrollTimerKeyDown = true;move(-1, wt, wt.step); }, wt.scrollTimerDelay);
-	
-						move(-1, wt, wt.step);
-					}   
+					wt.accelTimeout = setTimeout("var a = lookupWT('" + wt.idPrefix + "'); a.step = 2; a.accelTimeout = setTimeout(\"lookupWT('test1').step = keyScrollAccel\", 2000)", 2000);
 				}
-				else
+			}         
+		}
+        else if (key == 40)
+        {
+			if (wt.scrollTimer)
+			{
+				if (!wt.scrollTimerKeyDown)
 				{
+					if (!wt.scrollTimerTimeout && wt.step > 1)
+						wt.scrollTimerTimeout = setTimeout(function () { wt.scrollTimerKeyDown = true;move(-1, wt, wt.step); }, wt.scrollTimerDelay);
+
 					move(-1, wt, wt.step);
-					//accelerate
-					if (!wt.downkey)
-					{
-						wt.accelTimeout = setTimeout("var a = lookupWT('" + wt.idPrefix + "'); a.step = 2; a.accelTimeout = setTimeout(\"lookupWT('test1').step = keyScrollAccel\", 2000)", 2000);
-					}
+				}   
+			}
+			else
+			{
+				move(-1, wt, wt.step);
+				//accelerate
+				if (!wt.downkey)
+				{
+					wt.accelTimeout = setTimeout("var a = lookupWT('" + wt.idPrefix + "'); a.step = 2; a.accelTimeout = setTimeout(\"lookupWT('test1').step = keyScrollAccel\", 2000)", 2000);
 				}
-            }
+			}
         }
-            
+        
         if (!wt.downkey)
         {
             //put non-repeating downkey stuff here
@@ -742,7 +741,7 @@ function wordtree (idPrefix, width, height)
                     break;
             }
         }
-        //if (browser != "firefox" || platform == "windows")
+        
         wt.downkey = true;
         return transliterateKey(ev);
     }
@@ -1031,16 +1030,18 @@ eventually lexicon, query, and tag_id will be put into a single field for reques
         //block pages which are repeats or out of order
         if (returnedPage < 0 && returnedPage >= wt.pageUp)
         {
-            if (debug)
+            if (debug) {
                 console.log("wt.pageUp: " + wt.pageUp + "; returnObj.page: " + returnObj.page);
+            }
                 
             wt.blockScroll = false;
             return;
         }
         else if (returnedPage > 0 && returnedPage <= wt.pageUp)
         {
-            if (debug)
+            if (debug) {
                 console.log("wt.pageDown: " + wt.page + "; returnObj.pageDown: " + returnObj.page);
+            }
                 
             wt.blockScroll = false;
             return;
@@ -1225,10 +1226,8 @@ eventually lexicon, query, and tag_id will be put into a single field for reques
             for (var c = 0; c < rowLen; c++)
             {
                 var d2 = document.createElement("div");
-                d2.style.position = "absolute";
-                d2.style.paddingTop = "5px";
+                d2.classList.add("nodestylecol");
 
-                d2.style.top = "0px";
                 if (c != 0 && wt.columnOffsets[c] == 0)
                     d2.style.display = "none";
                 else
@@ -1325,7 +1324,7 @@ eventually lexicon, query, and tag_id will be put into a single field for reques
             if (typeof w.onClickActivate == "function")
             {
                 w.onClickActivate(w.params.lexicon, getColumnValues(this));
-                console.log("select: " + w.params.lexicon + ", " + getColumnValues(this));
+                //console.log("select: " + w.params.lexicon + ", " + getColumnValues(this));
             }        
 			if (w.entry && wt.autofocus)
             	w.entry.focus();
@@ -1392,8 +1391,7 @@ eventually lexicon, query, and tag_id will be put into a single field for reques
             
 		imgNode.src = wt.openNodeImg;
 		
-		if (n)
-		{
+		if (n) {
 			n.style.display = "block";
 		}
 		else //lazy load children...
@@ -1436,14 +1434,16 @@ eventually lexicon, query, and tag_id will be put into a single field for reques
         var n = document.getElementById(childrenConId);
         var imgNode = document.getElementById(imgId);
         
-        if (!n || !imgNode)
+        if (!n || !imgNode) {
         	return true;
+        }
 
-		if (imgNode.src.indexOf(wt.closedNodeImg) != -1)
+		if (imgNode.src.indexOf(wt.closedNodeImg) != -1) {
 			return false;
+        }
 			
-			n.style.display = "none";
-			imgNode.src = wt.closedNodeImg;    
+		n.style.display = "none";
+		imgNode.src = wt.closedNodeImg;    
 			
 		return true;
     }

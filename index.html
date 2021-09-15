@@ -1,13 +1,15 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="format-detection" content="telephone=no">
+  <meta name="viewport" content="width=device-width">
   <title>philolog.us</title>
   <meta name="description" content="Philologus is a fast, streamlined interface to the online Greek and Latin lexica hosted by the Perseus Project." />
   <meta name="keywords" content="Liddell Scott and Jones, Lewis and Short, Slater's Lexicon to Pindar, Perseus Project, Greek, Classical Greek, Ancient Greek, Latin, lexica, lexicon, dictionary, dendrea.org" />
-  <script type="text/javascript" src="jquery.min.js"></script>
+  <script type="text/javascript" src="jquery-3.6.0.min.js"></script>
   <script type="text/javascript" src="wordtree.js?v20"></script>
   <script type="text/javascript" src="utility.js?v4"></script>
   <script type="text/javascript" src="defjson.js?v24"></script>
@@ -211,7 +213,7 @@
     }
 
     function act(lexicon, cols) {
-      console.log("get def: " + cols[1] + ", " + lexicon);
+      //console.log("get def: " + cols[1] + ", " + lexicon);
       getDef(cols[1], lexicon, "", false, true);
     }
 
@@ -375,8 +377,9 @@
             document.getElementById("lexlabel" + i).style.color = "black";
           }
         }
-        if (wt.entry)
+        if (wt.entry) {
           wt.entry.focus();
+        }
         setCookie("lex", lex[num] ? lex[num] : lex[0]);
       }
     }
@@ -431,7 +434,7 @@ function transliterateKey(evt) {
     evt = evt || window.event;
     var source = evt.target || evt.srcElement;
     var val = source.value;
-    console.log("val: " + val);
+    //console.log("val: " + val);
     var charCode = typeof(evt.which) == "number" ? evt.which : evt.keyCode;
 
     if (charCode && charCode > 64 && charCode < 123) //letter
@@ -602,6 +605,12 @@ function transliterateKey(evt) {
         white-space:nowrap;
         background-color:white;
         border:1px solid white;
+        overflow-x: hidden;
+    }
+    .nodestylecol {
+        position: absolute;
+        paddingTop: 5px;
+        top: 0px;
     }
     .selectedRowClass {
         background-color: #8899EE;

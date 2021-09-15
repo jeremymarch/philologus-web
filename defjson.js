@@ -25,12 +25,14 @@ function getDef(id, lexicon, word, excludeFromHistory, pushToBackHistory) {
 
   //the random number id needed for ie--it would ask for the same page twice
   var url = 'wordservjson.php?id=' + id + '&lexicon=' + lexicon + '&skipcache=' + skipCache + '&addwordlinks=' + addWordLinks + '&x=' + Math.random();
-  console.log("get def: " + url);
+  //console.log("get def: " + url);
 
-  if (!useDefCache || !defCheckCache(lexicon, id))
+  if (!useDefCache || !defCheckCache(lexicon, id)) {
     loadXMLDoc(url);
-  else
+  }
+  else {
     return;
+  }
 
   //document.getElementById("lsjdef").innerHTML = "<center>Loading...</center>";
 }
@@ -165,7 +167,7 @@ function getPathBeforeLexicon(ee) {
           if (a > -1) {
             phPath = ee.substring(0, a) + "/";
           }        
-        }     
+        }
       }
       //console.log(phPath);
       return phPath;

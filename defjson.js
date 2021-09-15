@@ -137,15 +137,32 @@ function setWord(json, status) {
     setTimeout("saveHistory('" + lexicon + "'," + id + ", '" + word + "')", 1500);
   }
   if (vAddToBackHistory) {
-    //alert("a");
+
     if (history && typeof(history.pushState) == "function") {
-      /*
+      
 	    var ee = window.location.pathname;
-      var m = ee.match(/^(.*)(lsj|ls|slater)?(.*)$/);
-      //alert(m[1]);
-      var phPath = (m && m[1]) ? m[1] : "/";
-      */
-      var phPath = "/"; // "/"
+
+      //get path before any lsj/ls/slater; this makes it work on subdirectories
+      var phPath = "";
+      var a = ee.indexOf("/lsj");
+      if (a > -1) {
+        phPath = ee.substring(0,a) + "/";
+      }
+      else {
+        var a = ee.indexOf("/ls");
+        if (a > -1) {
+          phPath = ee.substring(0,a) + "/";
+        }
+        else {
+          var a = ee.indexOf("/slater");
+          if (a > -1) {
+            phPath = ee.substring(0,a) + "/";
+          }        
+        }     
+      }
+      //console.log(phPath);
+      
+      //add lexicon and word to path
       history.pushState([id, lexicon], wordid, phPath + lexicon + '/' + wordid);
     }
   }

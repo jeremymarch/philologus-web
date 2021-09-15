@@ -15,12 +15,8 @@ var keyScrollAccel = 4;
 var browser;
 if (window.navigator.userAgent.toLowerCase().indexOf("ie") != -1)
     browser = "ie";
-else if (window.navigator.userAgent.toLowerCase().indexOf("webkit/312") != -1) //Safari 1.3.2
-    browser = "safari312";
 else if (window.navigator.userAgent.toLowerCase().indexOf("webkit") != -1) 
     browser = "safari";
-else if (window.navigator.userAgent.toLowerCase().indexOf("opera") != -1) 
-    browser = "opera";
 else
     browser = "firefox";
     
@@ -129,11 +125,6 @@ function wordtree (idPrefix, width, height)
     this.scrollTimerStep = 1;		//step of scroll
 
     this.step = 1;
-    
-    if (browser == "safari312")
-    {
-    	this.safari132KeyBlocker = false;
-    }
     
     //whether to automatically focus the entry when wt "has focus", disable for iphones, ipads, etc.
     if (platform == "ipad" || platform == "iphone")
@@ -246,29 +237,22 @@ function wordtree (idPrefix, width, height)
     form.appendChild(loading);
 
 	var con = document.createElement("div");
+    con.classList.add("WordContainer");
 	con.id = idPrefix + "Container";
 
-    con.style.position = "relative";
-    con.style.top = this.conTopOffset + "px";
-    con.style.left = "11px"; 
+    con.style.top = this.conTopOffset + "px"; 
 	con.style.width = this.width - 20 + "px";
-    //con.style.border = "2px solid black";
 
-    con.style.overflow = "auto"; //for Safari 1.3.2
-    //con.style.overflowY = "hidden";
-    //con.style.overflowX = "hidden";
     /*
     if (con.addEventListener)
     {
         con.addEventListener('DOMMouseScroll', onMouseWheel, false);
         con.addEventListener("mousewheel", onMouseWheel, false);
     }
-    else if (con.attachEvent)
+    else if (con.attachEvent) {
         con.attachEvent("onmousewheel", onMouseWheel);
+    }
     */
-	con.style.paddingTop = "2px";
-    con.style.fontSize = "12pt";
-    con.style.fontWeight = "normal";
     
     con.onscroll = conOnScroll;
     var wt = this;
@@ -587,25 +571,20 @@ function wordtree (idPrefix, width, height)
             
         var key = ev.keyCode;
         
-        if (key == 17)
+        if (key == 17) {
             return;
+        }
         
         var match = /(.*)Entry/.exec(this.id);
-        if (!match)
+        if (!match) {
             return;
+        }
         var idPrefix = match[1];
         
         var wt = lookupWT(idPrefix);
-        if (!wt)
+        if (!wt) {
             return;
-            
-        if (browser == "safari312")
-    	{
-    		//block key stroke double firing in safari 1.3.2
-    		wt.safari132KeyBlocker = !wt.safari132KeyBlocker;
-    		if (!wt.safari132KeyBlocker)
-    			return;
-    	}
+        }
             
         //if ((browser != "firefox" && browser != "opera") || (platform == "windows" && browser != "opera"))
         if (true)

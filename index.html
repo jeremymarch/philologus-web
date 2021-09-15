@@ -598,7 +598,7 @@ function transliterateKey(evt) {
         margin:0px;
         position:relative;
         height:24px;
-        width:80%; /* wt.width - 24 + "px";//"100%";*/
+        width:calc(100% - 10px); /* wt.width - 24 + "px";//"100%";*/
         white-space:nowrap;
         background-color:white;
         border:1px solid white;
@@ -607,6 +607,14 @@ function transliterateKey(evt) {
         background-color: #8899EE;
         color: white;
         border: 1px solid #8899EE;
+    }
+    .WordContainer {
+      position: relative;
+      left: 11px;
+      overflow: auto;
+      padding-top: 2px;
+      font-size: 12pt;
+      font-weight: normal;
     }
   </style>
 </head>

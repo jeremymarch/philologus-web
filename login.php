@@ -8,7 +8,7 @@ define("LSJ_TABLE", "lsj");
 define("LS_TABLE", "ls");
 define("SLATER_TABLE", "slater");
 
-function connect(&$result)
+function connectold(&$result)
 {
  	//$conn = new PDO('mysql:host=127.0.0.1;dbname=DATABASE', USER, PASS);
 
@@ -22,6 +22,14 @@ function connect(&$result)
 	$conn->set_charset("utf8");
 
 	return $conn;
+}
+
+function connect() {
+    $conn = new PDO('mysql:host=localhost;dbname=philolog_us', "root", "clam1234");
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);  
+    $conn->setAttribute(PDO::ATTR_PERSISTENT, true);
+
+    return $conn;
 }
 
 function getTableForLexicon($lexicon)

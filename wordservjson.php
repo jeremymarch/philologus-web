@@ -43,13 +43,8 @@ function getWord($id, $wordid, $lexicon, $skipCache, $addWordLinks, $requestTime
 	$merror = "";
 	$defError = FALSE;
 
-  //$wordid = rawurldecode($wordid);
-  	/*(if (get_magic_quotes_gpc())
-	{
-      $wordid = stripslashes($wordid);
-	}*/
-
-	if (!($conn = connect($merror)))
+	$conn = connect();
+	if ($conn === false)
 	{
 		return '{"error":"Connection error."}';
 	}
@@ -78,9 +73,7 @@ function getWord($id, $wordid, $lexicon, $skipCache, $addWordLinks, $requestTime
 	
 	$lexiconTable = getTableForLexicon($lexicon);
 	
-	$agent = $conn->real_escape_string($agent);
-	$lexiconTable = $conn->real_escape_string($lexiconTable);
-	$ip = $conn->real_escape_string($_SERVER['REMOTE_ADDR']);
+	$ip = $_SERVER['REMOTE_ADDR'];
 
 	$query = "";
 	/*
@@ -96,17 +89,14 @@ function getWord($id, $wordid, $lexicon, $skipCache, $addWordLinks, $requestTime
 
 	//$query .= sprintf("INSERT INTO log VALUES (NULL,NULL,%s,%s,'%s','%s');", $l, $id, $ip, $agent);
 
-	$res = $conn->query($query);
-	//$res = $conn->store_result();
+    $pdores = $conn->query($query, PDO::FETCH_ASSOC);
+    if ($pdores === false || $pdores->rowCount() < 1) {
+        $defError = 3;
+    }
+    else {
+    	$word = $pdores->fetch(PDO::FETCH_ASSOC);
+    }
 
-	if ($res->num_rows > 0)
-	{
-		$word = $res->fetch_assoc();
-	}
-	else if (!$defError)
-	{
-		$defError = 3;
-	}
 	/*
 	if ($defError !== FALSE)
 	{
@@ -227,8 +217,6 @@ if (isset($_GET["addwordlinks"])) {
 if (isset($_GET["requestTime"])) {
 	$requestTime = $_GET["requestTime"];
 }
-
-
 
 echo getWord($id, $wordid, $lexicon, $skipcache, $addwordlinks, $requestTime);
 ?>

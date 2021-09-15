@@ -9,128 +9,138 @@ error_reporting(0);
 
 require("wordtreeJSONLib.php");
 
-function getSeq($conn, $word, $lexicon, $req)
+function getSeq($pdo, $word, $lexicon, $req)
 {
 	$table = getTableForLexicon($lexicon);
+
+
 	if ($req && $req->query->wordid)
 	{
-		$query = sprintf("SELECT seq FROM %s WHERE wordid = '%s' AND status = 0 ORDER BY unaccented_word LIMIT 1;", $conn->real_escape_string($table), $conn->real_escape_string($req->query->wordid));
-    $res = $conn->query($query);
-    if (!$res)
-    {
-    	return FALSE;
-    }
-		if ($res->num_rows == 0) //select last seq to scroll all the way to the bottom
+		$query = sprintf("SELECT seq FROM %s WHERE wordid = '%s' AND status = 0 ORDER BY unaccented_word LIMIT 1;", $table, $req->query->wordid);
+
+        $pdores = $pdo->query($query, PDO::FETCH_ASSOC);
+        if ($pdores === false) {
+            return FALSE;
+        }
+
+		if ($pdores->rowCount() == 0) //select last seq to scroll all the way to the bottom
 		{
-			$query = sprintf("SELECT MIN(seq) FROM %s WHERE status = 0 LIMIT 1;", $conn->real_escape_string($table) );
-			$res = $conn->query($query);
-			if (!$res)
-			{
-				 return FALSE;
-			}
+			$query = sprintf("SELECT MIN(seq) FROM %s WHERE status = 0 LIMIT 1;", $table );
+
+            $pdores = $pdo->query($query, PDO::FETCH_ASSOC);
+            if ($pdores === false) {
+                return FALSE;
+            }
 		}
 	}
 	else
 	{
-    $query = sprintf("SELECT seq FROM %s WHERE unaccented_word >= '%s' AND status = 0 ORDER BY unaccented_word LIMIT 1;", $conn->real_escape_string($table), $conn->real_escape_string($word));
-    $res = $conn->query($query);
-    if (!$res)
-    {
-    	return FALSE;
-    }
-    if ($res->num_rows == 0) //select last seq to scroll all the way to the bottom
-    {
-			$query = sprintf("SELECT MAX(seq) FROM %s WHERE status = 0 LIMIT 1;", $conn->real_escape_string($table) );
-    	$res = $conn->query($query);
-    	if (!$res)
-			{
-    	   return FALSE;
-   		}
-    }
-  }
+        $query = sprintf("SELECT seq FROM %s WHERE unaccented_word >= '%s' AND status = 0 ORDER BY unaccented_word LIMIT 1;", $table, $word);
 
-	$row = $res->fetch_row();
+        $pdores = $pdo->query($query, PDO::FETCH_ASSOC);
+        if ($pdores === false) {
+            return FALSE;
+        }
+        if ($pdores->rowCount() == 0) //select last seq to scroll all the way to the bottom
+        {
+    		$query = sprintf("SELECT MAX(seq) FROM %s WHERE status = 0 LIMIT 1;", $table );
+
+            $pdores = $pdo->query($query, PDO::FETCH_ASSOC);
+            if ($pdores === false) {
+                return FALSE;
+            }
+        }
+    }
+
+	$row = $pdores->fetch(PDO::FETCH_NUM);
 	//echo "def" . $row[0];
 	return $row[0];
 }
 
-function getBefore($conn, $req, &$result, $tagJoin, $tagSeq, $order, $tagwhere, $middleSeq)
+function getBefore($pdo, $req, &$result, $tagJoin, $tagSeq, $order, $tagwhere, $middleSeq)
 {
-
     $table = getTableForLexicon($req->lexicon);
+
     $query = sprintf("SELECT DISTINCT a.id,a.word FROM %s a %s WHERE a.seq < %s AND status = 0 %s ORDER BY a.seq DESC LIMIT %s,%s;", $table, $tagJoin, $middleSeq, $tagwhere, $req->limit * $req->page * -1, $req->limit);
 
-	if (!($res = $conn->query($query)))
-		return FALSE;
-
-    $numRows = $res->num_rows;
-	if ($numRows < $req->limit)
-		$result->lastPageUp = 1;
-	else
-		$result->lastPageUp = 0;
-
-    //get rows in reverse order
-    for ($i = $numRows - 1; $i >= 0; $i--)
+    $pdores = $pdo->query($query, PDO::FETCH_ASSOC);
+    if ($pdores !== false) 
     {
-        if (!$res->data_seek($i))
-            continue;
+        $numRows = $pdores->rowCount();
+    	if ($numRows < $req->limit)
+    		$result->lastPageUp = 1;
+    	else
+    		$result->lastPageUp = 0;
 
-        if (!($row = $res->fetch_array()))
-            continue;
+        //get rows in reverse order
+        $pdores = $pdores->fetchAll();
+        $pdores = array_reverse($pdores);
+        foreach($pdores as $row)
+        {
+            $seq = ($req->tag_id) ? $row['seq'] : 0;
 
-        $seq = ($req->tag_id) ? $row['seq'] : 0;
-
-        printJSONRow($result->rows, $row['id'], $seq, array($row['word'], $row['id'], $seq), NULL);
+            printJSONRow($result->rows, $row['id'], $seq, array($row['word'], $row['id'], $seq), NULL);
+        }
+        return $numRows;
     }
-    return $numRows;
+    else {
+        return 0;
+    }
 }
 
-function getEqualAndAfter($conn, $req, &$result, $tagJoin, $tagSeq, $order, $tagwhere, $middleSeq)
+function getEqualAndAfter($pdo, $req, &$result, $tagJoin, $tagSeq, $order, $tagwhere, $middleSeq)
 {
-	$table = getTableForLexicon($req->lexicon);
+    $table = getTableForLexicon($req->lexicon);
+
 	$query = sprintf("SELECT DISTINCT a.id,a.word FROM %s a %s WHERE a.seq >= %s AND status = 0 %s ORDER BY a.seq LIMIT %s,%s;", $table, $tagJoin, $middleSeq, $tagwhere, $req->limit * $req->page, $req->limit);
 
-	if (!($res = $conn->query($query)))
-		return FALSE;
+    $pdores = $pdo->query($query, PDO::FETCH_ASSOC);
+    if ($pdores !== false) 
+    {
+    	$numRows = $pdores->rowCount();
+    	if ($numRows < $req->limit)
+    		$result->lastPage = 1;
+    	else
+    		$result->lastPage = 0;
 
-	$numRows = $res->num_rows;
-	if ($numRows < $req->limit)
-		$result->lastPage = 1;
-	else
-		$result->lastPage = 0;
+        $first = TRUE;
 
-    $first = TRUE;
+    	//while ( $row = $res->fetch_assoc() )
+        foreach($pdores as $row)
+    	{
+            //maybe switch this to do_first and move >,< + = to do_first too?
+            if ($first)
+            {
+                $result->select = $row['id'];
+                $result->scroll = $row['id'];
+                $first = FALSE;
+            }
+    		$seq = ($req->tag_id) ? $row['seq'] : 0;
 
-	while ( $row = $res->fetch_assoc() )
-	{
-        //maybe switch this to do_first and move >,< + = to do_first too?
-        if ($first)
-        {
-            $result->select = $row['id'];
-            $result->scroll = $row['id'];
-            $first = FALSE;
-        }
-		$seq = ($req->tag_id) ? $row['seq'] : 0;
+            printJSONRow($result->rows, $row['id'], $seq, array($row['word'], $row['id'], $seq), NULL);
+    	}
 
-        printJSONRow($result->rows, $row['id'], $seq, array($row['word'], $row['id'], $seq), NULL);
-	}
-
-    return $numRows;
+        return $numRows;
+    }
+    else {
+        return 0;
+    }
 }
 
 function printRows($req, &$result)
 {
-    $conn = connect($result);
+    $conn = connect();
 
     if (($req->lexicon == "lsj" || $req->lexicon == "slater") && !$req->regex)
         $newword1 = beta2uni($req->word);
     else
         $newword1 = $req->word;
 
-    $req->escapedWord = $conn->real_escape_string($newword1);
+    $req->escapedWord = $newword1;//$conn->real_escape_string($newword1); //$conn->quote(
 
 	if ($req->tag_id)
 	{
+        /*
 		$tagjoin = sprintf("INNER JOIN %s_tag_x_words b ON a.id=b.word_id-1", $req->lexicon);
 
 		$tagsAndChildren = array($req->tag_id);
@@ -140,6 +150,7 @@ function printRows($req, &$result)
 		$tagwhere = "AND b.tag_id IN (" . implode(",", $tagsAndChildren) . ")";
 		$order = ($req->escapedWord || $req->mode = "context") ? "a.word" : "b.seq";
         $tagSeq = ",b.seq,b.line";
+        */
 	}
 	else
 	{
@@ -154,10 +165,12 @@ function printRows($req, &$result)
 
     if ($req->mode == "normal")
     {
+        /*
         if ($req->regex)
             getRegex($conn, $req, $result, $tagjoin, $tagSeq, $order, $tagwhere);
         else
             getLike($conn, $req, $result, $tagjoin, $tagSeq, $order, $tagwhere);
+        */
     }
     else if ($req->mode == "context" && $req->page == 0)
     {
@@ -265,8 +278,8 @@ $request->line = $request->query->line;
 
 validate($request);
 
-$conn = connect($result);
-
+//$conn = connect($result);
+/*
 $neighbor = 0;
 if ($request->delWordId && $request->tag_id && $request->delWordSeq)
 {
@@ -281,9 +294,9 @@ else if ($request->addWordId && $request->tag_id)
         return mysql_error();
     else
     {
-       $request->word = getWord($conn, $request->addWordId, $request->lexicon);
+       $request->word = getWord($pdo, $request->addWordId, $request->lexicon);
     }
 }
-
+*/
 process_request($request, $result, "printRows");
 ?>

@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+<META HTTP-EQUIV="EXPIRES" CONTENT="-1">
+<script src="utility.js"></script>
+<script>
+var els = new Array("author", "gloss", "foreign", "quote", "bib", "ref");
+    
+function change(id)
+{
+	var n = document.getElementById(id);
+	if (n.value == "bold")
+	{
+		n.style.color = "black";
+		n.style.fontWeight = "bold";
+	}
+	else
+	{
+		n.style.color = n.value;
+        n.style.fontWeight = "normal";
+	}
+    
+    var cookie = "";
+    
+    for (var i = 0; i < els.length; i++)
+    {
+        cookie += document.getElementById(els[i]).value + ":";
+    }
+    
+    //trim final :
+    cookie = cookie.substr(0, cookie.length - 1);
+
+    setCookie("filter", cookie, 365);
+}
+
+function onStart()
+{
+    var c = getCookie("filter");
+
+    if (!c)
+    {
+        for (var i = 0; i < els.length; i++)
+        {
+            var e = document.getElementById(els[i]);
+            e.style.color = "black";
+            e.style.fontWeight = "normal";
+            e.value = "black";
+        }
+        setCookie("filter", "black:black:black:black:black:black");
+    }
+    else
+    {
+        var a = c.split(":");
+        
+        for (var i = 0; i < els.length; i++)
+        {
+            var e = document.getElementById(els[i]);
+            if (a[i] == "bold")
+                e.style.fontWeight = "bold";
+            else
+                e.style.color = a[i];
+                
+            e.value = a[i];
+        }
+    }
+}
+
+</script>
+</head>
+<body onload="onStart()">
+<br><br>
+
+<div style="width:100%;text-align:center;font-size:16pt;"><a href="/">back to philolog.us</a></div>
+<br><br>
+<form onsubmit="return false">
+<table style="width:200px;margin-left:auto;margin-right:auto;">
+<tr><td>
+Author: </td><td align="right"><select name="author" id="author" onchange="change('author')"><option style="color:black;" value='black'><div style="width:10px;height:10px;background-color:black;">black</option><option style="color:blue;" value='blue'>blue</option><option style="color:red;" value='red'>red</option><option style="font-weight:bold;color:black;" value='bold'>bold</option><option style="color:green;" value='green'>green</option><option style="color:orange;" value='orange'>orange</option></select>
+</td></tr>
+
+<tr><td>
+Bib: </td><td align="right"><select name="bib" id="bib" onchange="change('bib')" ><option style="color:black;" value='black'>black</option><option style="color:blue;" value='blue'>blue</option><option style="color:red;" value='red'>red</option><option style="font-weight:bold;color:black;" value='bold'>bold</option><option style="color:green;" value='green'>green</option><option style="color:orange;" value='orange'>orange</option></select>
+</td></tr>
+
+<tr><td>
+Ref: </td><td align="right"><select name="ref" id="ref" onchange="change('ref')" ><option style="color:black;" value='black'>black</option><option style="color:blue;" value='blue'>blue</option><option style="color:red;" value='red'>red</option><option style="font-weight:bold;color:black;" value='bold'>bold</option><option style="color:green;" value='green'>green</option><option style="color:orange;" value='orange'>orange</option></select>
+</td></tr>
+
+<tr><td>
+Gloss: </td><td align="right"><select name="gloss" id="gloss" onchange="change('gloss')" ><option style="color:black;" value='black'>black</option><option style="color:blue;" value='blue'>blue</option><option style="color:red;" value='red'>red</option><option style="font-weight:bold;color:black;" value='bold'>bold</option><option style="color:green;" value='green'>green</option><option style="color:orange;" value='orange'>orange</option></select>
+</td></tr>
+
+<tr><td>
+Foreign: </td><td align="right"><select name="foreign" id="foreign" onchange="change('foreign')"><option style="color:black;" value='black'>black</option><option style="color:blue;" value='blue'>blue</option><option style="color:red;" value='red'>red</option><option style="font-weight:bold;color:black;" value='bold'>bold</option><option style="color:green;" value='green'>green</option><option style="color:orange;" value='orange'>orange</option></select>
+</td></tr>
+
+<tr><td>
+Quote: </td><td align="right"><select name="quote" id="quote" onchange="change('quote')"><option style="color:black;" value='black'>black</option><option style="color:blue;" value='blue'>blue</option><option style="color:red;" value='red'>red</option><option style="font-weight:bold;color:black;" value='bold'>bold</option><option style="color:green;" value='green'>green</option><option style="color:orange;" value='orange'>orange</option></select>
+</td></tr>
+</table>
+<!--
+<br>
+Mouse Wheel Scroll Speech: <select name="mousewheel" id="mousewheel"><option value="slow">slow</option><option value="normal">normal</option><option value="fast">fast</option></select><br>
+Arrow Key Scroll Speed: <select name="arrowkey" id="arrowkey"><option value="slow">slow</option><option value="normal">normal</option><option value="fast">fast</option></select>
+-->
+</form>
+</div>
+</body>
+</html>

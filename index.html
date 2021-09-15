@@ -1,0 +1,605 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <title>philolog.us</title>
+  <meta name="description" content="Philologus is a fast, streamlined interface to the online Greek and Latin lexica hosted by the Perseus Project." />
+  <meta name="keywords" content="Liddell Scott and Jones, Lewis and Short, Slater's Lexicon to Pindar, Perseus Project, Greek, Classical Greek, Ancient Greek, Latin, lexica, lexicon, dictionary, dendrea.org" />
+  <script type="text/javascript" src="jquery.min.js"></script>
+  <script type="text/javascript" src="wordtree.js?v9"></script>
+  <script type="text/javascript" src="utility.js?v4"></script>
+  <script type="text/javascript" src="defjson.js?v21"></script>
+  <script type="text/javascript">
+
+    function addEvent(evnt, elem, func) {
+      if (elem.addEventListener) // W3C DOM
+        elem.addEventListener(evnt, func, false);
+      else if (elem.attachEvent) { // IE DOM
+        elem.attachEvent("on" + evnt, func);
+      } else { // No much to do
+        elem[evnt] = func;
+      }
+    }
+
+    addEvent("popstate", window, function(e) {
+      //exclude from history, else we push it back on at same time as popping.  see defjson.js: end of setWord.
+      getDef(e.state[0], e.state[1], "", true, false);
+    });
+
+    var useRight = true;
+    var lex = new Array("lsj", "slater", "ls");
+
+    function closeWT(wtid) {
+      var w3 = lookupWT(wtid);
+      if (!w3)
+        return;
+
+      var p = w3.div.parentNode;
+
+      w3.close();
+
+      p.parentNode.removeChild(p);
+    }
+
+    function closeHistoryChooser() {
+      historyOpen = false;
+      //closeWT("test4");
+      var hist = lookupWT("test4");
+      if (!hist)
+        return;
+
+      var p = hist.div.parentNode;
+
+      hist.close();
+      document.getElementById("test1Entry").focus();
+    }
+
+    function toggleHistoryChooser() {
+      if (historyOpen) {
+        closeHistoryChooser();
+        document.getElementById("defbody").style.marginRight = "10px";
+
+        setCookie("historylist", "0", 365);
+      } else {
+        historyChooser();
+        document.getElementById("defbody").style.marginRight = "280px";
+
+        if (vIsLoggedIn) {
+          w4.refresh();
+        } else if (supports_html5_storage()) {
+          var h = localStorage.getItem("history");
+          if (w4 && h && h.length > 0)
+            w4.refreshWithRows(h);
+        } else {
+          document.getElementById("defbody").style.marginRight = "10px";
+        }
+        setCookie("historylist", "1", 365);
+        onResize();
+      }
+    }
+
+    function historyChooserOnSelect(lexicon, cols) {
+      //col2 is the lexicon # from history table
+      var lexi;
+      if (cols[2] == 0)
+        lexi = "lsj";
+      else if (cols[2] == 1)
+        lexi = "slater";
+      else
+        lexi = "ls";
+
+      getDef(cols[1], lexi, "", true, true);
+    }
+
+    var historyOpen = false;
+    var w4;
+
+    function historyChooser() {
+      if (historyOpen)
+        return;
+
+      var h = getViewportHeight(window);
+
+      historyOpen = true;
+      var d = document.getElementById("historylist");
+
+      document.getElementsByTagName("body")[0].appendChild(d);
+
+      w4 = new wordtree("test4", 260, h - (browser == "ie" ? 40 : 20));
+      w4.conTopOffset = 38;
+      w4.con.style.top = w4.conTopOffset + "px";
+      w4.setHeight(w4.height);
+      w4.div.style.zIndex = 997;
+
+      w4.div.style.borderRadius = "14px";
+      w4.div.style.margin = "10px";
+      w4.div.style.marginTop = "0px";
+      var title = '<table width="' + (w4.width - 10) +
+        'px" border=0 cellspacing=0 cellpadding=0 style="font-size:10pt;font-family:helvetica,arial,sans-serif;"><tr><td id="lexlabel0" style="cursor:pointer;width:100%;text-align:left;background-color:gray;color:white;padding:3px 10px;" onclick="">History</td></tr></table>';
+      w4.title.innerHTML = title;
+      w4.url = "historyserv.php";
+      w4.entry.style.left = "-4000px";
+      w4.onSelectionChanged = historyChooserOnSelect;
+
+      w4.onClickActivate = historyChooserOnSelect;
+      w4.onAddWord = null;
+      w4.onDeleteWord = null;//deleteTag;
+
+      if (useRight)
+        w4.show(document.getElementById("rightlist")); //w4.show(document.getElementById("historylistRight"));
+      else
+        w4.show(d);
+
+      w4.params.lexicon = lex[0];
+      w4.params.tag_id = 0;
+      w4.params.root_id = 0;
+      w4.params.userid = 1;
+
+      if (vIsLoggedIn)
+        w4.refresh();
+
+      //w4.entry.focus(); //breaks ie6 and ie8 because offscreen
+    }
+
+    function globalKeyUp(ev) {
+      if (!ev)
+        ev = window.event;
+      var key = ev.keyCode;
+      if (!ev.metaKey && !ev.ctrlKey && !ev.shiftKey && !ev.altKey) {
+        if (key == 27) //esc
+        {
+          var w = lookupWT("test1");
+          w.entry.focus();
+          //block default hot keys, like bookmark, etc
+          ev.returnValue = false;
+          if (typeof ev.preventDefault == "function")
+            ev.preventDefault();
+        }
+      }
+    }
+
+    function globalKeyDown(ev) {
+      if (!ev)
+        ev = window.event;
+
+      var key = ev.keyCode;
+      if (!ev.metaKey && !ev.ctrlKey && !ev.shiftKey && !ev.altKey) {
+        if (key == 49) //1
+        {
+          switchLex(0);
+          //block default hot keys, like bookmark, etc
+          ev.returnValue = false;
+          if (typeof ev.preventDefault == "function")
+            ev.preventDefault();
+        }
+        if (key == 50) //2
+        {
+          switchLex(1);
+          //block default hot keys, like bookmark, etc
+          ev.returnValue = false;
+          if (typeof ev.preventDefault == "function")
+            ev.preventDefault();
+        }
+        if (key == 51) //3
+        {
+          switchLex(2);
+          //block default hot keys, like bookmark, etc
+          ev.returnValue = false;
+          if (typeof ev.preventDefault == "function")
+            ev.preventDefault();
+        }
+        if (key == 52) //4
+        {
+          document.getElementById("test2Entry").focus();
+          //block default hot keys, like bookmark, etc
+          ev.returnValue = false;
+          if (typeof ev.preventDefault == "function")
+            ev.preventDefault();
+        }
+        if (key == 53) //5
+        {
+          toggleTagChooser();
+          //block default hot keys, like bookmark, etc
+          ev.returnValue = false;
+          if (typeof ev.preventDefault == "function")
+            ev.preventDefault();
+        }
+      }
+      return true;
+    }
+
+    function act(lexicon, cols) {
+      getDef(cols[1], lexicon, "", false, true);
+    }
+
+    function act2(lexicon, cols) {
+      getDef(cols[2], lexicon, "", false, true);
+    }
+
+    document.onkeydown = globalKeyDown;
+    document.onkeyup = globalKeyUp;
+
+    function start() {
+      var ee = window.location.pathname;
+      var m = ee.match(/\/(lsj|ls|slater)\/?([^\/]*)\/?$/);
+
+      if (m) {
+          var startLex = m[1];
+          if (m[2]) {
+            var startWord = m[2];
+            getDefFromWordid(startWord, startLex, '', true, true);
+        }
+      }
+
+      if (!getCookie('filter'))
+        setCookie('filter', 'red:bold:blue:blue:green:orange', 365);
+
+      var oldlex = getCookie("lex");
+      oldlex = oldlex ? oldlex : lex[0];
+      if (startLex) {
+        oldlex = startLex;
+      }
+      var winHeight = getViewportHeight(window);
+
+      if (browser == "ie") {
+        var w = new wordtree("test1", 260, winHeight - 18);
+
+        var ll = document.getElementById("leftlist");
+        ll.style.paddingTop = "10px";
+        ll.style.paddingLeft = "10px";
+        w.div.style.left = "2px";
+        w.div.style.top = "5px";
+        w.div.style.borderRadius = "14px";
+        w.show(document.getElementById("leftlist"));
+      } else {
+        var w = new wordtree("test1", 260, winHeight - 36);
+        w.div.style.borderRadius = "14px";
+        w.div.style.margin = "10px";
+        w.show(document.getElementById("leftlist"));
+      }
+
+      var showHist = getCookie('historylist');
+      if (supports_html5_storage() && showHist && showHist == 1) {
+        toggleHistoryChooser();
+        document.getElementById("defbody").style.marginRight = "280px";
+      } else {
+        document.getElementById("defbody").style.marginRight = "10px";
+      }
+
+      var cache = new Array();
+      w.cache = cache;
+      w.params.regex = 0;
+      w.params.lexicon = lex[0];
+      w.params.tag_id = 0;
+      w.params.root_id = 0;
+      if (startWord) {
+        w.params.wordid = startWord;
+      }
+
+      document.getElementById("test1Entry").focus();
+
+      var title = '<table width="' + (w.width - 18) +
+        'px" border=0 cellspacing=0 cellpadding=0 style="margin-left:4px;font-size:8pt;font-family:helvetica,arial,sans-serif;"><tr><td id="lexlabel0" style="cursor:pointer;width:31%;text-align:center;background-color:gray;color:white;padding:3px 0px;" onclick="switchLex(0)">LSJ</td><td id="lexlabel1" style="cursor:pointer;width:33%;text-align:center;background-color:white;color:black;padding:3px 0px;" onclick="switchLex(1)">Slater</td> <td id="lexlabel2" style="cursor:pointer;width:36%;text-align:center;background-color:white;color:black;padding:3px 0px;" onclick="switchLex(2)">Lewis &amp; Short</td></tr></table>';
+
+      w.title.innerHTML = title;
+      w.mode = "context";
+
+      w.onAddWord = null;//addWordToList;
+      w.onDeleteWord = null;//deleteTag;
+      w.onEnterActivate = null;//addWordToList;
+      w.onClickActivate = act;
+      w.onSelectionChanged = act;
+
+      if (platform == "ipad" || platform == "iphone") {
+        document.getElementById("defbody").style.marginRight = "10px";
+      }
+
+      if (typeof w2 == "undefined" || !w2) {
+
+      } else if (val = getCookie("w2_tag_id")) {
+        var match = /([0-9]+)(.*)/.exec(val);
+        if (!match) {
+          w2.params.tag_id = 0;
+        } else {
+          var oldtag_id = match[1];
+          var oldtag = match[2];
+          w2.params.tag_id = oldtag_id;
+          var labelname = oldtag;
+        }
+      } else {
+        w2.params.tag_id = 0;
+        var labelname = "Choose a List";
+      }
+
+      for (var lexNum = 0; lexNum < lex.length; lexNum++) {
+        if (oldlex == lex[lexNum]) {
+          switchLex(lexNum);
+          break;
+        }
+      }
+
+      //reset after querying
+      w.params.wordid = "";
+      delete w.params.wordid;
+      $(window).resize(onResize); //window.onresize = onResize;
+
+      if (platform == "mac" || platform == "ipad" || platform == "iphone") {
+        document.getElementsByTagName("body")[0].style.fontFamily = "NewAthenaUnicode,WebNewAthenaUnicode,helvetica,san-serif"; //because ie6 won't display unicode font if this is in the body
+      }
+      onResize(w, (typeof w2 != "undefined") ? w2 : null);
+    }
+
+    function onResize() {
+      var h = getViewportHeight(window);
+      var width = getViewportWidth(window);
+
+      var w = lookupWT("test1");
+      var w2 = lookupWT("test2");
+
+      w.setHeight(h - (browser == "ie" ? 18 : 14));
+
+      if (typeof w2 != "undefined" && w2)
+        w2.setHeight(h - 70);
+
+      var defbody = document.getElementById("defbody");
+      defbody.style.height = h - 80 + "px";
+
+      var lsjdef = document.getElementById("lsjdef");
+      lsjdef.style.height = (h - 110) + "px";
+
+      var rl = document.getElementById("rightlist");
+      if (rl) {
+        rl.style.height = (h - 58) + "px";
+      }
+      var historyList = lookupWT("test4");
+      if (historyList) {
+        historyList.setHeight(((h - 54)) - (browser == "ie" ? 20 : 20));
+      }
+    }
+
+    function switchLex(num) {
+      var wt = lookupWT("test1");
+      var wt2 = lookupWT("test2");
+      if (wt) {
+        wt.params.lexicon = lex[num];
+        wt.refresh();
+        if (wt2) {
+          wt2.params.lexicon = lex[num];
+          wt2.refresh();
+        }
+        for (var i = 0; i < lex.length; i++) {
+          if (i == num) {
+            document.getElementById("lexlabel" + i).style.backgroundColor = "gray";
+            document.getElementById("lexlabel" + i).style.color = "white";
+          } else {
+            document.getElementById("lexlabel" + i).style.backgroundColor = "white";
+            document.getElementById("lexlabel" + i).style.color = "black";
+          }
+        }
+        if (wt.entry)
+          wt.entry.focus();
+        setCookie("lex", lex[num] ? lex[num] : lex[0]);
+      }
+    }
+
+    function contact() {
+      var about =
+        "Philolog.us was first launched in June 2005 shortly after the <a href='www.perseus.tufts.edu'>Perseus Project</a> began offering access to its collections via web services. One of the primary aims has been to offer a streamlined, user-friendly interface to the lexica in the Perseus library.<br/><br/>Upcoming features include hierarchical trees of Greek words based on their etymology and the ability for users to create custom lists of words.<br/><br/>Design goals:<ul><li>a clean, unintrusive user-interface which lets the content be the focus</li><li>completely cross-platform access, available anywhere in the world</li><li>bringing the benefits of the digital age to resources previously limited by the print age</li><li>the ability to manipulate data for both convenience and perspicacity</li></ul>I welcome your questions and comments.<br/><br/>Jeremy March<br/><a href='mailto:jmarch@gradcenter.cuny.edu'>jmarch@gradcenter.cuny.edu</a>";
+
+      document.getElementById("lsjdef").innerHTML = "<div style='text-align:left;'>" + about + "</div>";
+    }
+
+    function showiPhone() {
+      var news = "Available as an iPhone/iPad app in <a href='https://itunes.apple.com/us/app/philolog.us/id622324932?mt=8' style='color:blue;'>Apple's App store</a>.<br><br><br>Now available for Android in the <a href='https://play.google.com/store/apps/details?id=com.philolog.philologus&hl=en' style='color:blue;'>Google Play store</a>.";
+      document.getElementById("lsjdef").innerHTML = "<div style='text-align:center;font-size:16pt;padding-top:60px;'>" + news + "</div>";
+
+    }
+
+    function config() {
+      window.location = "configure.html";
+    }
+
+    function BlockMove(event) {
+      // Tell Safari not to move the window.
+      event.preventDefault();
+    }
+
+    function closeMessage() {
+      var a = document.getElementById('message1');
+      if (a) {
+        a.style.display = 'none';
+      }
+    }
+
+    var tagsOpen = false;
+    var vIsLoggedIn = false;
+  </script>
+  <style>
+    @font-face {
+      font-family: 'WebNewAthenaUnicode';
+      src: url('/newathu405.ttf') format('truetype');
+    }
+
+    .menulink:link {
+      color: #888;
+      text-decoration: none;
+    }
+
+    .menulink:visited {
+      color: #888;
+      text-decoration: none;
+    }
+
+    .menulink:hover {
+      color: #888;
+      text-decoration: none;
+    }
+
+    .menulink:active {
+      color: #888;
+      text-decoration: none;
+    }
+
+    .menucell {
+      text-align: center;
+      width: 10%;
+    }
+
+    .biblLink:link {
+      text-decoration: none;
+    }
+
+    .biblLink:visited {
+      text-decoration: none;
+    }
+
+    .biblLink:hover {
+      text-decoration: underline;
+    }
+
+    .biblLink:active {
+      text-decoration: none;
+    }
+
+    .wordtree {
+      border: 4px solid red;
+      -moz-border-radius: 10px;
+      border-radius: 10px;
+    }
+
+    HTML {
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+      font-family: NewAthenaUnicode, WebNewAthenaUnicode;
+    }
+
+    .l1 {
+      margin-left: 36px;
+      position: relative;
+    }
+
+    .l2 {
+      margin-left: 72px;
+      position: relative;
+    }
+
+    .l3 {
+      margin-left: 108px;
+      position: relative;
+    }
+
+    .l4 {
+      margin-left: 144px;
+      position: relative;
+    }
+
+    .l5 {
+      margin-left: 180px;
+      position: relative;
+    }
+
+    .body {
+      line-height: 1.2;
+      margin: 8px 0px
+    }
+
+    /*
+.fo {color:blue;}
+.qu {color:blue;}
+.tr {font-weight:bold;}
+.au {color:red;}
+.bi {color:green;}
+.ti {color:orange;}
+*/
+
+    .fo {}
+
+    .qu {}
+
+    .tr {}
+
+    .au {}
+
+    .bi {}
+
+    .ti {}
+
+    .qu:before {
+      content: '\"';
+    }
+
+    .qu:after {
+      content: '\"';
+    }
+
+    .label {
+      font-weight: bold;
+      position: absolute;
+      left: -36px;
+    }
+
+    .label:after {
+      content: ' ';
+    }
+
+    .orth {
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body ontouchmove="BlockMove(event);" onload="start();" style="background-color:#eee;padding:0px;margin:0px;text-align:center;overflow:hidden;width:100%;height:100%;">
+
+  <div id="taglist" style="position:absolute;top:0px;left:0px;height:50%;width:220px;display:none;"></div>
+  <div id="historylist" style="position:absolute;top:50%;left:0px;height:50%;width:220px;display:none;"></div>
+  <div id="leftlist" style="position:absolute;top:0px;left:0px;height:100%;width:220px;"></div>
+
+  <div id="rightlist" style="position:absolute;top:69px;right:20px;width:260px;height:500px;">
+    <!--<div style="border:1px solid black;margin-top:40px;padding:5px;text-align:left;" id="message1">The site has been updated with new code and data.  Please report any problems you might have with the update to <a href="mailto:jmarch@gradcenter.cuny.edu">jmarch@gradcenter.cuny.edu</a>.  The previous version is available <a href="http://philolog.us/v1">here</a> if you need it.<br><br><div style="width:100%;text-align:center;"><a href="javascript:closeMessage()">close</a></div></div>
+	-->
+    <div id="taglistRight" style="position:absolute;top:0px;left:0px;height:50%;width:220px;"></div>
+    <div id="historylistRight" style="position:absolute;top:50%;left:0px;height:50%;width:220px;"></div>
+  </div>
+
+  <div id="topmenu" style="color:#888;font-size:10pt;padding-top:3px;padding-bottom:0px;position:relative;z-index:1;top:4px;margin-left:280px;margin-right:280px;overflow:hidden;border-bottom:1px solid #CCC;text-align:left;">
+    <table cellspacing="0" cellpadding="0" width="100%">
+      <tr>
+        <td class='menucell'><a href='javascript:contact()' class="menulink">about</a></td>
+        <td class='menucell'><a href='javascript:showiPhone()' class="menulink">iPhone/iPad and Android</a></td>
+        <td class='menucell'><a href='javascript:config()' class="menulink">configure</a></td>
+        <td class='menucell'><a href='javascript:toggleHistoryChooser()' class="menulink">toggle history</a></td>
+        <!--<td class='menucell'><a href='javascript:toggleTagList()' class="menulink">tags</a></td>
+	<td class='menucell' style="width:20%;"><span id="userNameField"></span><a id="loginLink" href='javascript:toggleLogin()' class="menulink">login</a></td>
+-->
+      </tr>
+    </table>
+  </div>
+
+  <div id="defbody" style="border-radius:14px;background-color:white;position:relative;z-index:1;top:50px;margin-left:280px;margin-right:280px;overflow:hidden;text-align:left;">
+    <div id="lsjdef" style="background-color:white;position:relative;z-index:2;margin:0px;padding:10px;overflow:auto;height:0px;"></div>
+  </div>
+
+  <div style="position:absolute;top:0px;right:0px;height:48px;border:0px solid green;width:280px;text-align:center;letter-spacing:normal;">
+    <span style="width:280px;text-align:center;position:relative;top:16px;font-size:28pt;font-family:helvetica,arial,sans-serif;">philolog.us</span>
+  </div>
+
+  <div id="mesg" style="display:none;background-color:blue;position:absolute;z-index:999;padding:10px;left:10px;bottom:10px;"></div>
+  <script type="text/javascript">
+    /*
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    */
+  </script>
+  <script type="text/javascript">
+    /*
+    try{
+    var pageTracker = _gat._getTracker("UA-9357265-1");
+    pageTracker._trackPageview();
+    } catch(err) {}
+    */
+  </script>
+</body>
+</html>

@@ -260,10 +260,10 @@ function wordtree (idPrefix, width, height)
 	con.style.width = this.width - 20 + "px";
     //con.style.border = "2px solid black";
 
-    con.style.overflow = "hidden"; //for Safari 1.3.2
-    con.style.overflowY = "hidden";
-    con.style.overflowX = "hidden";
-    
+    con.style.overflow = "auto"; //for Safari 1.3.2
+    //con.style.overflowY = "hidden";
+    //con.style.overflowX = "hidden";
+    /*
     if (con.addEventListener)
     {
         con.addEventListener('DOMMouseScroll', onMouseWheel, false);
@@ -271,12 +271,12 @@ function wordtree (idPrefix, width, height)
     }
     else if (con.attachEvent)
         con.attachEvent("onmousewheel", onMouseWheel);
-        
+    */
 	con.style.paddingTop = "2px";
     con.style.fontSize = "12pt";
     con.style.fontWeight = "normal";
     
-    con.onscroll = conOnScroll;
+    //con.onscroll = conOnScroll;
     var wt = this;
     d.onclick = function () { if (wt.entry && wt.autofocus) wt.entry.focus() };
     //d.oncontextmenu = function () { if (typeof wt.onContextMenu == "function") wt.onContextMenu(); return false; };
@@ -1049,7 +1049,7 @@ eventually lexicon, query, and tag_id will be put into a single field for reques
 */
 	//a two column response
     //var resp2 = '{"wtprefix":"test1","container":"test1Container","requestTime":"99999","selectId":"0","page":"0","lastPage":"0","lastPageUp":"1","scroll":"top","query":"a","cols":"2","arrOptions":[{"i":1,"r":["Α","abc"]},{"i":5,"r":["ἃ","abc"]},{"i":2,"r":["ἀ1","abc"]},{"i":20395,"r":["α1","abc"]},{"i":3,"r":["ἀ2","abc"]},{"i":102761,"r":["α2","abc"]},{"i":4,"r":["ἆ3","abc"]},{"i":6,"r":["ἄα","abc"]},{"i":8,"r":["ἀάβακτοι","abc"]},{"i":9,"r":["ἀαγής","abc"]}]}';    
-
+    var resp2 = '{"error":"","wtprefix":"test1","nocache":"0","container":"test1Container","requestTime":"1631672832851","selectId":"0","page":"0","lastPage":"0","lastPageUp":"1","scroll":"top","query":"","arrOptions":[{"i":0,"r":["Α α",0,0]},{"i":1,"r":["ἀ-",1,0]},{"i":2,"r":["ἀ-",2,0]},{"i":3,"r":["ἆ",3,0]},{"i":4,"r":["ἃ ἃ",4,0]},{"i":5,"r":["ἄα",5,0]},{"i":6,"r":["ἀάατος",6,0]},{"i":7,"r":["ἀάβακτοι",7,0]},{"i":8,"r":["ἀαγής",8,0]},{"i":9,"r":["ἄαδα",9,0]},{"i":10,"r":["ἀάζω",10,0]},{"i":11,"r":["ἄαθι",11,0]},{"i":12,"r":["ἀάκατος",12,0]},{"i":13,"r":["ἀακίδωτος",13,0]},{"i":14,"r":["ἀάλιον",14,0]},{"i":15,"r":["ἀανές",15,0]},{"i":16,"r":["ἄανθα",16,0]},{"i":17,"r":["ἀάπλετος",17,0]},{"i":18,"r":["ἄαπτος",18,0]},{"i":19,"r":["ἄας",19,0]},{"i":20,"r":["ἀασιφόρος",20,0]},{"i":21,"r":["ἀασιφρονία",21,0]},{"i":22,"r":["ἀασιφροσύνη",22,0]},{"i":23,"r":["ἀάσκει",23,0]},{"i":24,"r":["ἀασμός",24,0]},{"i":25,"r":["ἀάσπετος",25,0]},{"i":26,"r":["ἀάστονα",26,0]},{"i":27,"r":["ἀατήρ",27,0]},{"i":28,"r":["ἄατος",28,0]},{"i":29,"r":["ἄατος",29,0]},{"i":30,"r":["ἀάτυλον",30,0]},{"i":31,"r":["ἀάω",31,0]},{"i":32,"r":["ἄβα",32,0]},{"i":33,"r":["ἄβαγνα",33,0]},{"i":34,"r":["ἀβαθής",34,0]},{"i":35,"r":["ἄβαθρος",35,0]},{"i":36,"r":["ἀβαίνω",36,0]},{"i":37,"r":["ἀβακέω",37,0]},{"i":38,"r":["ἀβακηνούς",38,0]},{"i":39,"r":["ἀβακής",39,0]},{"i":40,"r":["ἀβάκητον",40,0]},{"i":41,"r":["ἀβακίζομαι",41,0]},{"i":42,"r":["ἀβάκιον",42,0]},{"i":43,"r":["ἀβακίσκος",43,0]},{"i":44,"r":["ἀβακλή",44,0]},{"i":45,"r":["ἀβακοειδής",45,0]},{"i":46,"r":["ἄβακτον",46,0]},{"i":47,"r":["ἀβάκχευτος",47,0]},{"i":48,"r":["ἀβακχίωτος",48,0]},{"i":49,"r":["ἄβαλε",49,0]},{"i":50,"r":["ἀβαμβάκευτος",50,0]},{"i":51,"r":["ἄβαξ",51,0]},{"i":52,"r":["ἀβάπτιστος",52,0]},{"i":53,"r":["ἄβαπτος",53,0]},{"i":54,"r":["ἀβαρβάριστος",54,0]},{"i":55,"r":["ἀβαρής",55,0]},{"i":56,"r":["ἄβαρις",56,0]},{"i":57,"r":["ἀβασάνιστος",57,0]},{"i":58,"r":["ἀβασίλευτος",58,0]},{"i":59,"r":["ἀβασκάνιστος",59,0]},{"i":60,"r":["ἀβάσκανος",60,0]},{"i":61,"r":["ἀβάσκαντος",61,0]},{"i":62,"r":["ἀβάστακτος",62,0]},{"i":63,"r":["ἄβαστον",63,0]},{"i":64,"r":["ἀβατόομαι",64,0]},{"i":65,"r":["ἄβατος",65,0]},{"i":66,"r":["ἀβαφής",66,0]},{"i":67,"r":["ἄβδελον",67,0]},{"i":68,"r":["ἀβδέλυκτος",68,0]},{"i":69,"r":["Ἀβδηρίτης",69,0]},{"i":70,"r":["ἄβδης",70,0]},{"i":71,"r":["ἀβέβαιος",71,0]},{"i":72,"r":["ἀβεβαιότης",72,0]},{"i":73,"r":["ἀβέβηλος",73,0]},{"i":74,"r":["ἄβεις",74,0]},{"i":75,"r":["ἄβελλον",75,0]},{"i":76,"r":["ἀβελτέρειος",76,0]},{"i":77,"r":["ἀβελτερεύομαι",77,0]},{"i":78,"r":["ἀβελτερία",78,0]},{"i":79,"r":["ἀβελτεροκόκκυξ",79,0]},{"i":80,"r":["ἀβέλτερος",80,0]},{"i":81,"r":["ἀβέρβηλον",81,0]},{"i":82,"r":["ἀβηδών",82,0]},{"i":83,"r":["ἀβήρελ",83,0]},{"i":84,"r":["ἀβηροῦσιν",84,0]},{"i":85,"r":["ἀβίαστος",85,0]},{"i":86,"r":["ἀβίβαστος",86,0]},{"i":87,"r":["ἀβίβλης",87,0]},{"i":88,"r":["ἄβιδα",88,0]},{"i":89,"r":["ἄβιν",89,0]},{"i":90,"r":["ἄβιος",90,0]},{"i":91,"r":["ἄβιος",91,0]},{"i":92,"r":["ἀβίοτος",92,0]},{"i":93,"r":["ἀβίυκτον",93,0]},{"i":94,"r":["ἀβιωτοποιός",94,0]},{"i":95,"r":["ἀβίωτος",95,0]},{"i":96,"r":["ἀβλάβεια",96,0]},{"i":97,"r":["ἀβλαβής",97,0]},{"i":98,"r":["ἀβλαβία",98,0]},{"i":99,"r":["ἀβλαβύνιον",99,0]},{"i":100,"r":["ἄβλαπτος",100,0]}]}';
     function procResponse(str, status)
     {
     	//var start = Date.now();
@@ -1058,7 +1058,7 @@ eventually lexicon, query, and tag_id will be put into a single field for reques
     	//	return;
     		
         var returnObj;
-        //str = resp2;
+        str = resp2;
         //console.log("Proc Response: " + str);
         //if (str.indexOf("test4") > -1)
         //alert(str);
@@ -1075,12 +1075,14 @@ eventually lexicon, query, and tag_id will be put into a single field for reques
         }
         catch(e) { if (debug) alert(e.message + "\n" + str); return; };
         
-        if (!returnObj)
+        if (!returnObj) {
             return;
+        }
 
         var wt = lookupWT(returnObj.wtprefix);
-        if (!wt)
+        if (!wt) {
             return;         
+        }
             
         if (returnObj.mesgCode)
         {
@@ -1113,9 +1115,9 @@ eventually lexicon, query, and tag_id will be put into a single field for reques
 
         //if caching is activated, add result to cache
         if (wt.cache && returnObj.nocache == 0) //the only one we don't cache is if if it's looked up via wordid
-	{
+        {
             wtAddResultToCache(wt, returnObj.query, str);
-	}
+        }
 
         if (debug && returnObj.error)
         {
@@ -1148,7 +1150,7 @@ eventually lexicon, query, and tag_id will be put into a single field for reques
         if (returnedPage < 0 && returnedPage >= wt.pageUp)
         {
             if (debug)
-                alert("wt.pageUp: " + wt.pageUp + "; returnObj.page: " + returnObj.page);
+                console.log("wt.pageUp: " + wt.pageUp + "; returnObj.page: " + returnObj.page);
                 
             wt.blockScroll = false;
             return;
@@ -1156,7 +1158,7 @@ eventually lexicon, query, and tag_id will be put into a single field for reques
         else if (returnedPage > 0 && returnedPage <= wt.pageUp)
         {
             if (debug)
-                alert("wt.pageDown: " + wt.page + "; returnObj.pageDown: " + returnObj.page);
+                console.log("wt.pageDown: " + wt.page + "; returnObj.pageDown: " + returnObj.page);
                 
             wt.blockScroll = false;
             return;
@@ -1204,8 +1206,9 @@ eventually lexicon, query, and tag_id will be put into a single field for reques
                     wt.selectedRow = node;
                 }
             }
-            if (wt.entry && wt.autofocus)
+            if (wt.entry && wt.autofocus) {
             	wt.entry.focus();
+            }
 
             wt.blockScroll = false;
         }
@@ -1222,8 +1225,9 @@ eventually lexicon, query, and tag_id will be put into a single field for reques
 				wt.lastPageUp = false;      
         
 			//delete old rows if this is page 0 and this isn't a tree
-			if (returnedPage == 0 && !returnObj.parentid)
+			if (returnedPage == 0 && !returnObj.parentid) {
 				wt.clearWordTree();        
+            }
         
 			if (debug)
 			{
@@ -1244,8 +1248,9 @@ eventually lexicon, query, and tag_id will be put into a single field for reques
 			for (var i = 0; i < len; i++)
 			{
 				var insertBefore = false;
-				if (returnedPage < 0)
+				if (returnedPage < 0) {
 					insertBefore = true;
+                }
 	
 				printTree(wt, con, arrOptions[i], 0, insertBefore, returnObj.roots, returnObj.selectId);
 				//printRow(wt, con, arrOptions[i], 0, insertBefore, returnObj.roots, returnObj.selectId);
@@ -1324,26 +1329,12 @@ eventually lexicon, query, and tag_id will be put into a single field for reques
         function printRow(wt, con, rowItem, level, insertAtTop, topLevelTreeRow, selectedId)
         {
             var node = document.createElement('div');
-            node.style.paddingTop = "1px";
-            node.style.paddingBottom = "1px";
-            node.style.margin = "0px";
-            node.style.position = "relative";
-            node.style.height = wt.rowHeight + "px";
-            node.style.whiteSpace = "nowrap";
-            node.style.backgroundColor = "white"; //required for clicking node in IE.  not sure why?
-            node.style.width = wt.width - 24 + "px";//"100%";
-            //node.style.vAlign = "middle";
-            
-            //node.style.border = "1px solid black";
-            //node.style.borderRadius = "7px";     
-            node.style.border = "1px solid white"; //so spacing between rows is fixed when scrolling up and down
-
+            node.classList.add("nodestyle");
             node.id = wt.rowCount++ + wt.idPrefix;
-            
+            node.setAttribute("rowid", wt.rowCount++ + wt.idPrefix);
             node.onclick = onSelect;
             
-            if (wt.dragDest)
-            {
+            if (wt.dragDest) {
             	addEvent(node, 'dragover', wt.overFunc);
 			  	addEvent(node, 'dragenter', wt.enterFunc); // to get IE to work
 			  	addEvent(node, 'dragleave', wt.leaveFunc);

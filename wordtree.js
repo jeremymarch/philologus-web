@@ -923,14 +923,12 @@ function wordtree (idPrefix, width, height)
         
         if (wt.selectedRow)
         {
-            wt.selectedRow.style.backgroundColor = 'white';
-            wt.selectedRow.style.color = 'black';
-            wt.selectedRow.style.border = "1px solid white";
+            if (wt.selectedRow.classList.contains("selectedRowClass")) {
+                wt.selectedRow.classList.remove("selectedRowClass");
+            }
         }
 
-        n.style.border = "1px solid #8899EE";
-        n.style.backgroundColor = '#8899EE';
-        n.style.color = 'white';
+        n.classList.add("selectedRowClass");
         
 		if (wt.dragSource)
 		{
@@ -1200,9 +1198,7 @@ eventually lexicon, query, and tag_id will be put into a single field for reques
                 var node = document.getElementById(returnObj.selectId);
                 if (node)
                 {
-                    node.style.backgroundColor = "#8899EE";
-                    node.style.color = "white";
-                    node.style.border = "1px solid #8899EE";
+                    node.classList.add("selectedRowClass");
                     wt.selectedRow = node;
                 }
             }
@@ -1272,13 +1268,11 @@ eventually lexicon, query, and tag_id will be put into a single field for reques
 				{
 					if (wt.selectedRow)
 					{
-						wt.selectedRow.style.backgroundColor = "white";
-						wt.selectedRow.style.color = "black";
-						wt.selectedRow.style.border = "1px solid white";
+                        if (wt.selectedRow.classList.contains("selectedRowClass")) {
+                            wt.selectedRow.classList.remove("selectedRowClass");
+                        }
 					}
-					s.style.backgroundColor = "#8899EE";
-					s.style.color = "white";
-					s.style.border = "1px solid #8899EE";
+					s.classList.add("selectedRowClass");
 					wt.selectedRow = s;
 					
 					if (wt.dragSource)
@@ -1330,8 +1324,9 @@ eventually lexicon, query, and tag_id will be put into a single field for reques
         {
             var node = document.createElement('div');
             node.classList.add("nodestyle");
+            node.setAttribute("rowid", wt.rowCount + wt.idPrefix);
             node.id = wt.rowCount++ + wt.idPrefix;
-            node.setAttribute("rowid", wt.rowCount++ + wt.idPrefix);
+            
             node.onclick = onSelect;
             
             if (wt.dragDest) {
@@ -1426,15 +1421,14 @@ eventually lexicon, query, and tag_id will be put into a single field for reques
 
             if (w.selectedRow)
             {
-                w.selectedRow.style.border = "1px solid white";
-                w.selectedRow.style.backgroundColor = "white";
-                w.selectedRow.style.color = "black";
                 w.selectedRow.setAttribute("draggable", false);
+
+                if (w.selectedRow.classList.contains("selectedRowClass")) {
+                    w.selectedRow.classList.remove("selectedRowClass");
+                }
             }
             
-            this.style.backgroundColor = "#8899EE";
-            this.style.color = "white";
-            this.style.border = "1px solid #8899EE";
+            this.classList.add("selectedRowClass");
             
             if (w.dragSource)
             {

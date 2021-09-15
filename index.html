@@ -8,15 +8,15 @@
   <meta name="description" content="Philologus is a fast, streamlined interface to the online Greek and Latin lexica hosted by the Perseus Project." />
   <meta name="keywords" content="Liddell Scott and Jones, Lewis and Short, Slater's Lexicon to Pindar, Perseus Project, Greek, Classical Greek, Ancient Greek, Latin, lexica, lexicon, dictionary, dendrea.org" />
   <script type="text/javascript" src="jquery.min.js"></script>
-  <script type="text/javascript" src="wordtree.js?v17"></script>
+  <script type="text/javascript" src="wordtree.js?v20"></script>
   <script type="text/javascript" src="utility.js?v4"></script>
   <script type="text/javascript" src="defjson.js?v24"></script>
   <script type="text/javascript">
 
     function addEvent(evnt, elem, func) {
-      if (elem.addEventListener) // W3C DOM
+      if (elem.addEventListener)
         elem.addEventListener(evnt, func, false);
-      else if (elem.attachEvent) { // IE DOM
+      else if (elem.attachEvent) { // for IE 8 and below
         elem.attachEvent("on" + evnt, func);
       } else { // No much to do
         elem[evnt] = func;
@@ -562,6 +562,11 @@
         white-space:nowrap;
         background-color:white;
         border:1px solid white;
+    }
+    .selectedRowClass {
+        background-color: #8899EE;
+        color: white;
+        border: 1px solid #8899EE;
     }
   </style>
 </head>

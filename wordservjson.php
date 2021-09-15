@@ -43,11 +43,11 @@ function getWord($id, $wordid, $lexicon, $skipCache, $addWordLinks, $requestTime
 	$merror = "";
 	$defError = FALSE;
 
-  $wordid = rawurldecode($wordid);
-  if (get_magic_quotes_gpc())
+  //$wordid = rawurldecode($wordid);
+  	/*(if (get_magic_quotes_gpc())
 	{
       $wordid = stripslashes($wordid);
-	}
+	}*/
 
 	if (!($conn = connect($merror)))
 	{
@@ -65,7 +65,7 @@ function getWord($id, $wordid, $lexicon, $skipCache, $addWordLinks, $requestTime
 
 	if ($lexicon == "lsj") {
 		$l = 0;
-		$isLSJ = TRUE;
+		$isLSJ = FALSE;//TRUE;
 	} else if ($lexicon == "slater") {
 		$l = 1;
 		$isLSJ = FALSE;
@@ -83,30 +83,23 @@ function getWord($id, $wordid, $lexicon, $skipCache, $addWordLinks, $requestTime
 	$ip = $conn->real_escape_string($_SERVER['REMOTE_ADDR']);
 
 	$query = "";
+	/*
 	if ($wordid)
 	{
 		$wordid = $conn->real_escape_string($wordid);
 
-		$query .= sprintf("SELECT id INTO @WORDID FROM %s WHERE wordid='%s' LIMIT 1;", $lexiconTable, $wordid);
-		$id = "@WORDID";
+		//$query .= sprintf("SELECT id INTO @WORDID FROM %s WHERE wordid='%s' LIMIT 1;", $lexiconTable, $wordid);
+		//$id = "@WORDID";
 	}
-	$query .= sprintf("SELECT a.id,a.wordid,a.word,a.unaccented_word,a.htmlDef2 %s FROM %s a %s WHERE a.id=%s LIMIT 1;", ($isLSJ) ? ",b.present,b.future,b.aorist,b.perfect,b.perfmid,b.aoristpass,b.usePP " : "", $lexiconTable, ($isLSJ) ? " LEFT JOIN greek_verbs b ON a.id=b.id-1 " : "", $id);
-	$query .= sprintf("INSERT INTO log VALUES (NULL,NULL,%s,%s,'%s','%s');", $l, $id, $ip, $agent);
+	*/
+	$query .= sprintf("SELECT a.id,a.wordid,a.word,a.unaccented_word,a.htmlDef2,a.status %s FROM %s a %s WHERE a.id=%s LIMIT 1;", ($isLSJ) ? ",b.present,b.future,b.aorist,b.perfect,b.perfmid,b.aoristpass,b.usePP " : "", $lexiconTable, ($isLSJ) ? " LEFT JOIN greek_verbs b ON a.id=b.id-1 " : "", $id);
 
-	if ( !$conn->multi_query($query) )
-	{
-		$defError = 1;
-	}
-	if ( !$res = $conn->store_result() )
-	{
-		if (!$wordid)
-			$defError = 2;
-		else if ( !$conn->next_result() || !$res = $conn->store_result() ){
-			$defError = 4;
-		}
-	}
+	//$query .= sprintf("INSERT INTO log VALUES (NULL,NULL,%s,%s,'%s','%s');", $l, $id, $ip, $agent);
 
-	if (!$defError && $res->num_rows > 0)
+	$res = $conn->query($query);
+	//$res = $conn->store_result();
+
+	if ($res->num_rows > 0)
 	{
 		$word = $res->fetch_assoc();
 	}
@@ -114,7 +107,7 @@ function getWord($id, $wordid, $lexicon, $skipCache, $addWordLinks, $requestTime
 	{
 		$defError = 3;
 	}
-
+	/*
 	if ($defError !== FALSE)
 	{
 		if ($errorConn = connect($merror)) //NEW CONNECT TO AVOID MYSQL OUT-OF-SEQUENCE ERRORS
@@ -137,10 +130,10 @@ function getWord($id, $wordid, $lexicon, $skipCache, $addWordLinks, $requestTime
 					$res->free_result();
 				}
 			}
-			$errorQuery = sprintf("INSERT INTO deferrors VALUES (NULL,NULL,%s,%s,'%s','%s','%s','%s');", $defError, $myErrorNum, $myError, $myQuery, $ip, $agent);
-			$errorConn->query($errorQuery);
+			//$errorQuery = sprintf("INSERT INTO deferrors VALUES (NULL,NULL,%s,%s,'%s','%s','%s','%s');", $defError, $myErrorNum, $myError, $myQuery, $ip, $agent);
+			//$errorConn->query($errorQuery);
 		}
-
+		
 		if ($wordid)
 		{
 			return '{"errorMesg":"Could not find word \"' . $wordid . '\" in ' . $lexicon . '.","method":"setWord"}';
@@ -148,7 +141,7 @@ function getWord($id, $wordid, $lexicon, $skipCache, $addWordLinks, $requestTime
 
 		return '{"error":"Could not find word."}';
 	}
-
+	*/
 	$def = $word['htmlDef2'];
 
 	if ($isLSJ && $word['usePP'] == 1)
@@ -172,16 +165,18 @@ function getWord($id, $wordid, $lexicon, $skipCache, $addWordLinks, $requestTime
 		$requestTime = 0;
   }
 
-  $defname = ($_GET['defname']) ? $_GET['defname'] : "";
+  $defname = (isset($_GET['defname'])) ? $_GET['defname'] : "";
 
-	$pps = trim($pps);
-	if ($pps == "—, —, —, —, —, —")
-	{
-		$pps = "";
+	if (isset($pps)) {
+		$pps = trim($pps);
+		if ($pps == "—, —, —, —, —, —")
+		{
+			$pps = "";
+		}
 	}
 	$json = new stdClass;
 
-	$json->principalParts = $pps;
+	$json->principalParts = (isset($pps)) ? $pps : "";
 	$json->def = trim($def2);
 	$json->defName = $defname;
 	$json->word = trim($word['word']);
@@ -203,5 +198,37 @@ header("Content-Type: text/html; charset=utf-8");
 header("Cache-Control: no-cache");
 header("Expires: -1");
 
-echo getWord($_GET["id"], $_GET['wordid'], $_GET["lexicon"], $_GET["skipcache"], $_GET["addwordlinks"], $_GET["requestTime"]);
+$id = NULL;
+$wordid = NULL;
+$lexicon  = NULL;
+$skipcache  = NULL;
+$addwordlinks = NULL;
+$requestTime = NULL;
+
+if (isset($_GET["id"])) {
+	$id = $_GET["id"];
+}
+if (isset($_GET['wordid'])) {
+	$wordid = $_GET['wordid'];
+}
+
+if (isset($_GET["lexicon"])) {
+	$lexicon = $_GET["lexicon"];
+}
+
+if (isset($_GET["skipcache"])) {
+	$skipcache = $_GET["skipcache"];
+}
+
+if (isset($_GET["addwordlinks"])) {
+	$addwordlinks = $_GET["addwordlinks"];
+}
+
+if (isset($_GET["requestTime"])) {
+	$requestTime = $_GET["requestTime"];
+}
+
+
+
+echo getWord($id, $wordid, $lexicon, $skipcache, $addwordlinks, $requestTime);
 ?>

@@ -1,7 +1,7 @@
 <?php
 define("HOST", "localhost");
-define("USER", "philolog_user");
-define("PASS", "Pi61ndar");
+define("USER", "root");
+define("PASS", "clam1234");
 define("DATABASE", "philolog_us");
 
 define("LSJ_TABLE", "lsj");

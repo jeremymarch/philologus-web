@@ -25,7 +25,7 @@ function getDef(id, lexicon, word, excludeFromHistory, pushToBackHistory) {
 
   //the random number id needed for ie--it would ask for the same page twice
   var url = 'wordservjson.php?id=' + id + '&lexicon=' + lexicon + '&skipcache=' + skipCache + '&addwordlinks=' + addWordLinks + '&x=' + Math.random();
-  //alert(url);
+  console.log("get def: " + url);
 
   if (!useDefCache || !defCheckCache(lexicon, id))
     loadXMLDoc(url);

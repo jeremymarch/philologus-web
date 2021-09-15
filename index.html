@@ -8,9 +8,9 @@
   <meta name="description" content="Philologus is a fast, streamlined interface to the online Greek and Latin lexica hosted by the Perseus Project." />
   <meta name="keywords" content="Liddell Scott and Jones, Lewis and Short, Slater's Lexicon to Pindar, Perseus Project, Greek, Classical Greek, Ancient Greek, Latin, lexica, lexicon, dictionary, dendrea.org" />
   <script type="text/javascript" src="jquery.min.js"></script>
-  <script type="text/javascript" src="wordtree.js?v14"></script>
+  <script type="text/javascript" src="wordtree.js?v17"></script>
   <script type="text/javascript" src="utility.js?v4"></script>
-  <script type="text/javascript" src="defjson.js?v21"></script>
+  <script type="text/javascript" src="defjson.js?v24"></script>
   <script type="text/javascript">
 
     function addEvent(evnt, elem, func) {
@@ -211,6 +211,7 @@
     }
 
     function act(lexicon, cols) {
+      console.log("get def: " + cols[1] + ", " + lexicon);
       getDef(cols[1], lexicon, "", false, true);
     }
 
@@ -289,12 +290,8 @@
       w.onAddWord = null;//addWordToList;
       w.onDeleteWord = null;//deleteTag;
       w.onEnterActivate = null;//addWordToList;
-      w.onClickActivate = act;
-      w.onSelectionChanged = act;
-
-      if (platform == "ipad" || platform == "iphone") {
-        document.getElementById("defbody").style.marginRight = "10px";
-      }
+      //w.onClickActivate = act;
+      //w.onSelectionChanged = act;
 
       if (typeof w2 == "undefined" || !w2) {
 
@@ -400,13 +397,13 @@
     function config() {
       window.location = "configure.html";
     }
-
+/*
     function BlockMove(event) {
       // Tell Safari not to move the window.
       event.stopPropagation(); 
       event.stopImmediatePropagation();
     }
-
+*/
     function closeMessage() {
       var a = document.getElementById('message1');
       if (a) {

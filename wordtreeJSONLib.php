@@ -197,10 +197,10 @@ function beta2uni($word)
 			$newword .= "Π";
 			break;
 		case "q":
-			$newword .= "θ";
+			$newword .= "";
 			break;
 		case "Q":
-			$newword .= "Θ";
+			$newword .= "";
 			break;
 		case "r":
 			$newword .= "ρ";
@@ -221,10 +221,10 @@ function beta2uni($word)
 			$newword .= "Τ";
 			break;
 		case "u":
-			$newword .= "υ";
+			$newword .= "θ";
 			break;
 		case "U":
-			$newword .= "Υ";
+			$newword .= "Θ";
 			break;
 		case "v":
 			$newword .= "ω";

@@ -568,8 +568,9 @@ function wordtree (idPrefix, width, height)
 
     function wordtree_ondown(ev)
     {
-        if (!ev)
+        if (!ev) {
             ev = window.event;
+        }
             
         var key = ev.keyCode;
         
@@ -743,7 +744,12 @@ function wordtree (idPrefix, width, height)
         }
         
         wt.downkey = true;
-        return transliterateKey(ev);
+        if (wt.params.lexicon == "lsj" || wt.params.lexicon == "slater") {
+            return transliterateKey(ev);
+        }
+        else {
+            return true;
+        }
     }
 
     function move(upDown, wt, step)

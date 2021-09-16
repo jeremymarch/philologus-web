@@ -1,12 +1,5 @@
 <?php
-define("HOST", "localhost");
-define("USER", "root");
-define("PASS", "clam1234");
-define("DATABASE", "philolog_us");
-
-define("LSJ_TABLE", "lsj");
-define("LS_TABLE", "ls");
-define("SLATER_TABLE", "slater");
+require("blahpw.php");
 
 function connectold(&$result)
 {

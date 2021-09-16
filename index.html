@@ -624,7 +624,14 @@ function transliterateKey(evt) {
       padding-top: 2px;
       font-size: 12pt;
       font-weight: normal;
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
     }
+    
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .WordContainer::-webkit-scrollbar {
+    display: none;
+  }
   </style>
 </head>
 

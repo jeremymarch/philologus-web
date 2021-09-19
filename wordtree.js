@@ -102,14 +102,12 @@ function wordtree (idPrefix, width, height)
     this.asYouType = true;
 	this.width = width;
 	this.bgcolor = "#ffffff";
-	this.margin = "0";
 	this.selectedRow = null;
     this.accelTimeout = null;
     this.lastRequestTime = null;
     this.lastKeyTimeout = null;
     this.indentWidth = 15; //for tree branches
-    this.rowHeight = 24;
-    this.conTopOffset = 66;
+    this.conTopOffset = 72;
     
     /*
     At first we were using the system default rate for scrolling when
@@ -153,12 +151,7 @@ function wordtree (idPrefix, width, height)
 	var d = document.createElement("div");
 	this.div = d;
     d.id = idPrefix;
-	d.style.margin = this.margin + "px";
-    d.style.textAlign = "left";
-    d.style.position = "relative";
-
-    //d.style.width = this.width + 10 + "px";
-	d.style.backgroundColor = this.bgcolor;
+    d.classList.add("wordtree");
 
     var ti = document.createElement("div");
     ti.style.position = "absolute";

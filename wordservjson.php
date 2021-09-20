@@ -8,7 +8,7 @@ function restyleDef($def)
 	if (isset($_COOKIE["filter"]))
 	{
 		//order of $search should be same order as values in cookie
-		$search = array('class="au"', 'class="tr"', 'class="qu"', 'class="fo"', 'class="bi"', 'class="ti"');
+		$search = array('class="au', 'class="tr', 'class="qu', 'class="fo', 'class="bi', 'class="ti');
 		$replace = array();
 
 		$filters = explode(":", $_COOKIE["filter"]);
@@ -16,15 +16,10 @@ function restyleDef($def)
 
 		for ($i = 0; $i < $numFilters; $i++)
 		{
-			if ($filters[$i] != "")
-			{
-				if ($filters[$i] == "bold")
-					$replace[$i] = $search[$i] . ' style="font-weight:' . $filters[$i] . ';"';
-				else
-					$replace[$i] = $search[$i] . ' style="color:' . $filters[$i] . ';"';
+			if ($filters[$i] != "") {
+				$replace[$i] = $search[$i] . ' ' . $filters[$i] . 'text';
 			}
-			else
-			{
+			else {
 				$replace[$i] = $search[$i];
 			}
 		}

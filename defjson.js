@@ -86,8 +86,9 @@ function setWord(json, status) {
     return;
   };
 
-  if (!data)
+  if (!data) {
     return;
+  }
 
   var con = document.getElementById("lsjdef");
 
@@ -106,8 +107,9 @@ function setWord(json, status) {
 
   pps = (pps && pps.length > 0) ? pps : "";
 
-  if (lexicon)
+  if (lexicon) {
     lexicon = lexicon;
+  }
 
   var perseusLink = "<a href='http://www.perseus.tufts.edu/hopper/text.jsp?doc=Perseus:text:";
 
@@ -124,7 +126,7 @@ function setWord(json, status) {
   }
   attr += escape(lemma);
   attr += "' style='color:blue;'>entry</a> courtesy of the<br/>";
-  attr += "<a href='http://www.perseus.tufts.edu' style='color:blue;'><img alt='' src='" + getPathBeforeLexicon(window.location.pathname) + "images/new-rm-logo2.gif' height='25' width='25' style='vertical-align: middle; border: 0;'/>Perseus Digital Library</a>";
+  attr += "<a href='http://www.perseus.tufts.edu' style='color:blue;'>Perseus Digital Library</a>";
   attr += "</div>";
   //attr += "</div>";
 

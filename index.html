@@ -118,8 +118,8 @@
       w4.div.style.borderRadius = "14px";
       w4.div.style.margin = "10px";
       w4.div.style.marginTop = "0px";
-      var title = '<table width="' + (w4.width - 10) +
-        'px" border=0 cellspacing=0 cellpadding=0 style="font-size:10pt;font-family:helvetica,arial,sans-serif;"><tr><td id="lexlabel0" style="cursor:pointer;width:100%;text-align:left;background-color:gray;color:white;padding:3px 10px;" onclick="">History</td></tr></table>';
+      var title = '<div style="width="' + (w4.width - 10) +
+        'px;"><div class="lexitem">History</div></div>';
       w4.title.innerHTML = title;
       w4.url = "historyserv.php";
       w4.entry.style.left = "-4000px";
@@ -281,8 +281,8 @@
 
       document.getElementById("test1Entry").focus();
 
-      var title = '<div style="margin-left:4px;font-size:8pt;font-family:helvetica,arial,sans-serif;width:' + (w.width - 18) +
-        'px;display:flex"><div id="lexlabel0" style="cursor:pointer;width:31%;text-align:center;background-color:gray;color:white;padding:3px 0px;" onclick="switchLex(0)">LSJ</div><div id="lexlabel1" style="cursor:pointer;width:33%;text-align:center;background-color:white;color:black;padding:3px 0px;" onclick="switchLex(1)">Slater</div><div id="lexlabel2" style="cursor:pointer;width:36%;text-align:center;background-color:white;color:black;padding:3px 0px;" onclick="switchLex(2)">Lewis &amp; Short</div></div>';
+      var title = '<div style="margin-left:4px;width:' + (w.width - 18) +
+        'px;display:flex;"><div id="lexlabel0" class="lexitem" style="width:31%;" onclick="switchLex(0)">LSJ</div><div id="lexlabel1" class="lexitem" style="width:33%;" onclick="switchLex(1)">Slater</div><div id="lexlabel2" class="lexitem" style="width:36%;" onclick="switchLex(2)">Lewis &amp; Short</div></div>';
 
       w.title.innerHTML = title;
       w.mode = "context";
@@ -366,15 +366,17 @@
           wt2.params.lexicon = lex[num];
           wt2.refresh();
         }
-        for (var i = 0; i < lex.length; i++) {
-          if (i == num) {
-            document.getElementById("lexlabel" + i).style.backgroundColor = "gray";
-            document.getElementById("lexlabel" + i).style.color = "white";
-          } else {
-            document.getElementById("lexlabel" + i).style.backgroundColor = "white";
-            document.getElementById("lexlabel" + i).style.color = "black";
-          }
+
+        var a = document.querySelector(".lexselected");
+        if (a) {
+          a.classList.remove("lexselected");
         }
+
+        var b = document.getElementById("lexlabel" + num);
+        if (b) {
+          b.classList.add("lexselected");
+        }
+
         if (wt.entry) {
           wt.entry.focus();
         }
@@ -461,6 +463,12 @@ function transliterateKey(evt) {
       src: url('/newathu405.ttf') format('truetype');
     }
 
+    .lexitem {
+      cursor:pointer;text-align:center;background-color:white;color:black;padding:3px 0px;font-size:8pt;font-family:helvetica,arial,sans-serif;
+    }
+    .lexselected {
+      background-color:gray;color:white;
+    }
     .menulink:link {
       color: #888;
       text-decoration: none;

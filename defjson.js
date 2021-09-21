@@ -115,18 +115,18 @@ function setWord(json, status) {
 
   var attr = "<br/><br/><div id='attrib' style='text-align:center;'>";
   if (lexicon && lexicon == "lsj") {
-    attr += perseusLink + "1999.04.0057' style='color:blue;'>Liddell, Scott, and Jones</a> ";
+    attr += perseusLink + "1999.04.0057' class='attrlink'>Liddell, Scott, and Jones</a> ";
     attr += perseusLink + "1999.04.0057%3Aentry%3D";
   } else if (lexicon && lexicon == "slater") {
-    attr += perseusLink + "1999.04.0072' style='color:blue;'>Slater's <i>Lexicon to Pindar</i></a> ";
+    attr += perseusLink + "1999.04.0072' class='attrlink'>Slater's <i>Lexicon to Pindar</i></a> ";
     attr += perseusLink + "1999.04.0072%3Aentry%3D";
   } else if (lexicon && lexicon == "ls") {
-    attr += perseusLink + "1999.04.0059' style='color:blue;'>Lewis and Short</a> ";
+    attr += perseusLink + "1999.04.0059' class='attrlink'>Lewis and Short</a> ";
     attr += perseusLink + "1999.04.0059%3Aentry%3D";
   }
   attr += escape(lemma);
-  attr += "' style='color:blue;'>entry</a> courtesy of the<br/>";
-  attr += "<a href='http://www.perseus.tufts.edu' style='color:blue;'>Perseus Digital Library</a>";
+  attr += "' class='attrlink'>entry</a> courtesy of the<br/>";
+  attr += "<a href='http://www.perseus.tufts.edu' class='attrlink'>Perseus Digital Library</a>";
   attr += "</div>";
   //attr += "</div>";
 

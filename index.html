@@ -281,8 +281,8 @@
 
       document.getElementById("test1Entry").focus();
 
-      var title = '<table width="' + (w.width - 18) +
-        'px" border=0 cellspacing=0 cellpadding=0 style="margin-left:4px;font-size:8pt;font-family:helvetica,arial,sans-serif;"><tr><td id="lexlabel0" style="cursor:pointer;width:31%;text-align:center;background-color:gray;color:white;padding:3px 0px;" onclick="switchLex(0)">LSJ</td><td id="lexlabel1" style="cursor:pointer;width:33%;text-align:center;background-color:white;color:black;padding:3px 0px;" onclick="switchLex(1)">Slater</td> <td id="lexlabel2" style="cursor:pointer;width:36%;text-align:center;background-color:white;color:black;padding:3px 0px;" onclick="switchLex(2)">Lewis &amp; Short</td></tr></table>';
+      var title = '<div style="margin-left:4px;font-size:8pt;font-family:helvetica,arial,sans-serif;width:' + (w.width - 18) +
+        'px;display:flex"><div id="lexlabel0" style="cursor:pointer;width:31%;text-align:center;background-color:gray;color:white;padding:3px 0px;" onclick="switchLex(0)">LSJ</div><div id="lexlabel1" style="cursor:pointer;width:33%;text-align:center;background-color:white;color:black;padding:3px 0px;" onclick="switchLex(1)">Slater</div><div id="lexlabel2" style="cursor:pointer;width:36%;text-align:center;background-color:white;color:black;padding:3px 0px;" onclick="switchLex(2)">Lewis &amp; Short</div></div>';
 
       w.title.innerHTML = title;
       w.mode = "context";
@@ -592,6 +592,10 @@ function transliterateKey(evt) {
       position: fixed;
     }
 
+    #logo {
+      color: black;
+    }
+
     .nodestyle {
         line-height: 32px;
         margin:0px;
@@ -650,6 +654,10 @@ function transliterateKey(evt) {
     background-color: white;
   }
 
+  .dark #logo {
+      color: white;
+    }
+
   .dark.philbody {
     background-color:black;
   }
@@ -679,6 +687,10 @@ border-radius: 13px;
 border: 2px solid black;
 padding-left: 6px;
 height: 22px;
+  }
+
+.attrlink {
+  color: blue;
   }
 
 .dark .wordtree input {
@@ -728,6 +740,10 @@ color: white;
     color: white;
   }
 
+.attrlink {
+  color: #03a5fc;
+  }
+
   </style>
 </head>
 
@@ -761,7 +777,7 @@ color: white;
   </div>
 
   <div style="position:absolute;top:0px;right:0px;height:48px;border:0px solid green;width:280px;text-align:center;letter-spacing:normal;">
-    <span style="width:280px;text-align:center;position:relative;top:16px;font-size:28pt;font-family:helvetica,arial,sans-serif;">philolog.us</span>
+    <span id="logo" style="width:280px;text-align:center;position:relative;top:16px;font-size:28pt;font-family:helvetica,arial,sans-serif;">philolog.us</span>
   </div>
 
   <div id="mesg" style="display:none;background-color:blue;position:absolute;z-index:999;padding:10px;left:10px;bottom:10px;"></div>

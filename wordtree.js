@@ -739,7 +739,7 @@ function wordtree (idPrefix, width, height)
         }
         
         wt.downkey = true;
-        if (wt.params.lexicon == "lsj" || wt.params.lexicon == "slater") {
+        if (!ev.ctrlKey && !ev.metaKey && (wt.params.lexicon == "lsj" || wt.params.lexicon == "slater")) {
             return transliterateKey(ev);
         }
         else {

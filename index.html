@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
@@ -11,7 +10,6 @@
   <meta name="keywords" content="Liddell Scott and Jones, Lewis and Short, Slater's Lexicon to Pindar, Perseus Project, Greek, Classical Greek, Ancient Greek, Latin, lexica, lexicon, dictionary, dendrea.org" />
   <script type="text/javascript" src="jquery-3.6.0.min.js"></script>
   <script type="text/javascript" src="wordtree.js?v20"></script>
-  <script type="text/javascript" src="utility.js?v4"></script>
   <script type="text/javascript" src="defjson.js?v24"></script>
   <script type="text/javascript">
 
@@ -35,8 +33,9 @@
 
     function closeWT(wtid) {
       var w3 = lookupWT(wtid);
-      if (!w3)
+      if (!w3) {
         return;
+      }
 
       var p = w3.div.parentNode;
 
@@ -49,8 +48,9 @@
       historyOpen = false;
       //closeWT("test4");
       var hist = lookupWT("test4");
-      if (!hist)
+      if (!hist) {
         return;
+      }
 
       var p = hist.div.parentNode;
 
@@ -99,8 +99,9 @@
     var w4;
 
     function historyChooser() {
-      if (historyOpen)
+      if (historyOpen) {
         return;
+      }
 
       var h = getViewportHeight(window);
 
@@ -454,6 +455,70 @@ function transliterateKey(evt) {
     return true;
 }
 
+function getViewportHeight(w) 
+{
+  if (typeof(w.innerHeight) != "undefined") {
+      return w.innerHeight;
+  }
+  if (w.document.compatMode == 'CSS1Compat') {
+      return w.document.documentElement.clientHeight;
+  }
+  if (w.document.body) {
+      return w.document.body.clientHeight; 
+  }
+  return window.undefined;
+}
+
+function getViewportWidth(w) 
+{
+  if (typeof(w.innerWidth) != "undefined") {
+      return w.innerWidth;
+  }
+  if (w.document.compatMode == 'CSS1Compat') {
+      return w.document.documentElement.clientWidth;
+  }
+  if (w.document.body) {
+      return w.document.body.clientWidth; 
+  }
+  return window.undefined;
+}
+
+function setCookie(name, value, days) 
+{
+  if (days) {
+    var date = new Date();
+    date.setTime(date.getTime() + (days*24*60*60*1000));
+    var expires = "; expires=" + date.toGMTString();
+  }
+  else {
+        var expires = "";
+    }
+  document.cookie = name + "=" + value + expires + "; path=/";
+}
+
+function getCookie(name)
+{
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(';');
+
+  for (var i = 0; i < ca.length; i++) 
+  {
+    var c = ca[i];
+
+    while (c.charAt(0) == ' ') 
+      c = c.substring(1, c.length);
+
+    if (c.indexOf(nameEQ) == 0) 
+      return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+}
+
+function eraseCookie(name) 
+{
+  setCookie(name, "", -1);
+}
+
 
     var tagsOpen = false;
     var vIsLoggedIn = false;
@@ -775,7 +840,6 @@ color: white;
   <div id="taglist" style="position:absolute;top:0px;left:0px;height:50%;width:220px;display:none;"></div>
   <div id="historylist" style="position:absolute;top:50%;left:0px;height:50%;width:220px;display:none;"></div>
   <div id="leftlist" style="position:absolute;top:0px;left:0px;height:100%;width:220px;"></div>
-
   <div id="rightlist" style="position:absolute;top:69px;right:20px;width:260px;height:500px;">
     <!--<div style="border:1px solid black;margin-top:40px;padding:5px;text-align:left;" id="message1">The site has been updated with new code and data.  Please report any problems you might have with the update to <a href="mailto:jmarch@gradcenter.cuny.edu">jmarch@gradcenter.cuny.edu</a>.  The previous version is available <a href="http://philolog.us/v1">here</a> if you need it.<br><br><div style="width:100%;text-align:center;"><a href="javascript:closeMessage()">close</a></div></div>
 	-->

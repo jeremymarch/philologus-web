@@ -60,11 +60,13 @@
 
     function toggleHistoryChooser() {
       if (historyOpen) {
+        document.getElementById("openHistory").style.display = "block";
         closeHistoryChooser();
         document.getElementById("defbody").style.marginRight = "10px";
 
         setCookie("historylist", "0", 365);
       } else {
+        document.getElementById("openHistory").style.display = "none";
         historyChooser();
         document.getElementById("defbody").style.marginRight = "280px";
 
@@ -458,15 +460,17 @@ function transliterateKey(evt) {
 function getViewportHeight(w) 
 {
   if (typeof(w.innerHeight) != "undefined") {
-      return w.innerHeight;
+    return w.innerHeight;
   }
-  if (w.document.compatMode == 'CSS1Compat') {
-      return w.document.documentElement.clientHeight;
+  else if (w.document.compatMode == 'CSS1Compat') {
+    return w.document.documentElement.clientHeight;
   }
-  if (w.document.body) {
-      return w.document.body.clientHeight; 
+  else if (w.document.body) {
+    return w.document.body.clientHeight; 
   }
-  return window.undefined;
+  else {
+    return window.undefined;
+  }
 }
 
 function getViewportWidth(w) 
@@ -519,6 +523,26 @@ function eraseCookie(name)
   setCookie(name, "", -1);
 }
 
+function toggleSettings() {
+  console.log("here");
+  var s = document.getElementById("settingsdiv");
+  if (s && s.style.display == "block") {
+    s.style.display = "none";
+  }
+  else if (s) {
+    s.style.display = "block";
+  }
+  else
+  {
+    console.log("here2");
+    var s = document.createElement("div");
+    s.id = "settingsdiv";
+    s.classList.add("settings");
+    s.style.display = "block";
+    document.body.appendChild(s);
+  }
+
+}
 
     var tagsOpen = false;
     var vIsLoggedIn = false;
@@ -530,6 +554,22 @@ function eraseCookie(name)
       url('/newathu5_8.woff') format('woff'),
       url('/newathu5_8.ttf') format('ttf');
     }
+
+    .settings {
+      position: absolute;
+      top: 49px;
+      right: 11px;
+      background-color: black;
+      height: 200px;
+      width: 250px;
+      z-index: 999;
+      border: 2px solid white;
+    }
+#hamburger rect {
+  fill: white;
+}
+
+
 /*https://codepen.io/supah/pen/BjYLdW*/
 .spinner {
   animation: rotate 2s linear infinite;
@@ -832,6 +872,21 @@ color: white;
   .dark .defbody { color: white; }
   .dark .attrlink { color: #03a5fc; }
 
+  #openHistory {
+    color: black;
+    position: fixed;
+    top: 50%;
+    right: 0px;
+    writing-mode: vertical-lr;
+    background-color: white;
+    cursor: pointer;
+    padding: 10px 2px;
+    font-family: helvetica;
+    font-size: 10pt;
+    z-index: 900;
+    border-radius: 4px;
+    display: none;
+  }
   </style>
 </head>
 
@@ -840,6 +895,7 @@ color: white;
   <div id="taglist" style="position:absolute;top:0px;left:0px;height:50%;width:220px;display:none;"></div>
   <div id="historylist" style="position:absolute;top:50%;left:0px;height:50%;width:220px;display:none;"></div>
   <div id="leftlist" style="position:absolute;top:0px;left:0px;height:100%;width:220px;"></div>
+  <div id="openHistory">History</div>
   <div id="rightlist" style="position:absolute;top:69px;right:20px;width:260px;height:500px;">
     <!--<div style="border:1px solid black;margin-top:40px;padding:5px;text-align:left;" id="message1">The site has been updated with new code and data.  Please report any problems you might have with the update to <a href="mailto:jmarch@gradcenter.cuny.edu">jmarch@gradcenter.cuny.edu</a>.  The previous version is available <a href="http://philolog.us/v1">here</a> if you need it.<br><br><div style="width:100%;text-align:center;"><a href="javascript:closeMessage()">close</a></div></div>
 	-->
@@ -863,8 +919,20 @@ color: white;
     <div id="lsjdef" style="position:relative;z-index:2;margin:0px;padding:10px;overflow:auto;height:0px;"></div>
   </div>
 
-  <div style="position:absolute;top:0px;right:0px;height:48px;border:0px solid green;width:280px;text-align:center;letter-spacing:normal;">
-    <span id="logo" style="width:280px;text-align:center;position:relative;top:16px;font-size:28pt;font-family:helvetica,arial,sans-serif;">philolog.us</span>
+  <div style="position:absolute;top:0px;right:0px;height:48px;border:0px solid green;text-align:center;letter-spacing:normal;display:flex;">
+    <div id="logo" style="padding: 0px 15px;text-align:center;position:relative;top:16px;font-size:28pt;font-family:helvetica,arial,sans-serif;">philolog.us</div>
+    <div style="padding-top:18px;padding-right:10px;"><div>
+
+
+  <svg onclick="toggleSettings()" id="hamburger" style="border:1px solid #666;border-radius:4px;cursor: pointer;height:30px;width:px;" viewBox="0 0 120 120">
+    <rect x="10" y="30" width="100" height="12"></rect>
+    <rect x="10" y="56" width="100" height="12"></rect>
+    <rect x="10" y="82" width="100" height="12"></rect>
+  </svg>
+
+
+</div>
+  </div>
   </div>
 
   <div id="mesg" style="display:none;background-color:blue;position:absolute;z-index:999;padding:10px;left:10px;bottom:10px;"></div>

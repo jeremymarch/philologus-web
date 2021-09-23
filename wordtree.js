@@ -163,11 +163,6 @@ function wordtree (idPrefix, width, height)
 
     this.div.appendChild(ti);
 
-	var form = document.createElement("form");
-	form.style.display = "inline";
-    form.onsubmit = dontsubmit;
-	this.div.appendChild(form);
-
 	var input = document.createElement("input");
 	input.style.width = this.width - 76 + "px";
     input.style.position = "absolute";
@@ -226,10 +221,10 @@ function wordtree (idPrefix, width, height)
 
 	if (this.showMorph)
 	{
-		form.appendChild(morph);
+		this.div.appendChild(morph);
 	}
-	form.appendChild(input);
-    form.appendChild(loading);
+	this.div.appendChild(input);
+    this.div.appendChild(loading);
 
 	var con = document.createElement("div");
     con.classList.add("WordContainer");
@@ -344,8 +339,8 @@ function wordtree (idPrefix, width, height)
     
     function refreshWithRows(rows)
     {
-    	    this.lastRequestTime = 0; //defeat sequence check
-            procResponse(rows, "success");
+        this.lastRequestTime = 0; //defeat sequence check
+        procResponse(rows, "success");
     }
     
     function refreshWordTree()

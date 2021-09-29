@@ -186,7 +186,9 @@ function wordtree (idPrefix, width, height)
     loading.style.width = "20px";
     loading.style.zIndex = 10;
     //var loading = document.createElement("div");
-    loading.innerHTML = '<svg class="spinner" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="10"></circle></svg>';
+    //loading.innerHTML = '<svg class="spinner" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="10"></circle></svg>';
+    loading.innerHTML = '<div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>';
+    
     this.loading = loading;
    
    	if (this.showMorph)

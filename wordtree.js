@@ -179,8 +179,8 @@ function wordtree (idPrefix, width, height)
     loading.id = this.idPrefix + "Loading";
     //loading.src = "images/loading2.gif";
     loading.style.position = "absolute";
-    loading.style.top = "44px";
-    loading.style.right = "15px";
+    loading.style.top = "15px";
+    loading.style.right = "44px";
     loading.style.display = "none";
     loading.style.height = "20px";
     loading.style.width = "20px";

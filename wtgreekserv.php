@@ -16,7 +16,7 @@ function getSeq($pdo, $word, $lexicon, $req)
 
 	if ($req && $req->query->wordid)
 	{
-		$query = sprintf("SELECT seq FROM %s WHERE wordid = '%s' AND status = 0 ORDER BY unaccented_word LIMIT 1;", $table, $req->query->wordid);
+		$query = sprintf("SELECT %s FROM %s WHERE %s = '%s' AND %s = 0 ORDER BY %s LIMIT 1;", SEQ_COL, $table, WORDID_COL, $req->query->wordid, STATUS_COL, UNACCENTED_COL);
 
         $pdores = $pdo->query($query, PDO::FETCH_ASSOC);
         if ($pdores === false) {
@@ -25,7 +25,7 @@ function getSeq($pdo, $word, $lexicon, $req)
 
 		if ($pdores->rowCount() == 0) //select last seq to scroll all the way to the bottom
 		{
-			$query = sprintf("SELECT MIN(seq) FROM %s WHERE status = 0 LIMIT 1;", $table );
+			$query = sprintf("SELECT MIN(%s) FROM %s WHERE %s = 0 LIMIT 1;", SEQ_COL, $table, STATUS_COL );
 
             $pdores = $pdo->query($query, PDO::FETCH_ASSOC);
             if ($pdores === false) {
@@ -35,7 +35,7 @@ function getSeq($pdo, $word, $lexicon, $req)
 	}
 	else
 	{
-        $query = sprintf("SELECT seq FROM %s WHERE unaccented_word >= '%s' AND status = 0 ORDER BY unaccented_word LIMIT 1;", $table, $word);
+        $query = sprintf("SELECT %s FROM %s WHERE %s >= '%s' AND %s = 0 ORDER BY %s LIMIT 1;", SEQ_COL, $table, UNACCENTED_COL, $word, STATUS_COL, UNACCENTED_COL);
 
         $pdores = $pdo->query($query, PDO::FETCH_ASSOC);
         if ($pdores === false) {
@@ -43,7 +43,7 @@ function getSeq($pdo, $word, $lexicon, $req)
         }
         if ($pdores->rowCount() == 0) //select last seq to scroll all the way to the bottom
         {
-    		$query = sprintf("SELECT MAX(seq) FROM %s WHERE status = 0 LIMIT 1;", $table );
+    		$query = sprintf("SELECT MAX(%s) FROM %s WHERE %s = 0 LIMIT 1;", SEQ_COL, $table, STATUS_COL );
 
             $pdores = $pdo->query($query, PDO::FETCH_ASSOC);
             if ($pdores === false) {
@@ -61,7 +61,7 @@ function getBefore($pdo, $req, &$result, $tagJoin, $tagSeq, $order, $tagwhere, $
 {
     $table = getTableForLexicon($req->lexicon);
 
-    $query = sprintf("SELECT DISTINCT a.id,a.word FROM %s a %s WHERE a.seq < %s AND status = 0 %s ORDER BY a.seq DESC LIMIT %s,%s;", $table, $tagJoin, $middleSeq, $tagwhere, $req->limit * $req->page * -1, $req->limit);
+    $query = sprintf("SELECT DISTINCT a.%s,a.%s FROM %s a %s WHERE a.%s < %s AND %s = 0 %s ORDER BY a.%s DESC LIMIT %s,%s;", ID_COL, WORD_COL, $table, $tagJoin, SEQ_COL, $middleSeq, STATUS_COL, $tagwhere, SEQ_COL, $req->limit * $req->page * -1, $req->limit);
 
     $pdores = $pdo->query($query, PDO::FETCH_ASSOC);
     if ($pdores !== false) 
@@ -92,7 +92,7 @@ function getEqualAndAfter($pdo, $req, &$result, $tagJoin, $tagSeq, $order, $tagw
 {
     $table = getTableForLexicon($req->lexicon);
 
-	$query = sprintf("SELECT DISTINCT a.id,a.word FROM %s a %s WHERE a.seq >= %s AND status = 0 %s ORDER BY a.seq LIMIT %s,%s;", $table, $tagJoin, $middleSeq, $tagwhere, $req->limit * $req->page, $req->limit);
+	$query = sprintf("SELECT DISTINCT a.%s,a.%s FROM %s a %s WHERE a.%s >= %s AND %s = 0 %s ORDER BY %s LIMIT %s,%s;", ID_COL, WORD_COL, $table, $tagJoin, SEQ_COL, $middleSeq, STATUS_COL, $tagwhere, SEQ_COL, $req->limit * $req->page, $req->limit);
 
     $pdores = $pdo->query($query, PDO::FETCH_ASSOC);
     if ($pdores !== false) 

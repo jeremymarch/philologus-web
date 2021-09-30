@@ -17,7 +17,7 @@ function getSeq($pdo, $word, $lexicon, $req)
 	if ($req && $req->query->wordid)
 	{
 		$query = sprintf("SELECT %s FROM %s WHERE %s = '%s' AND %s = 0 ORDER BY %s LIMIT 1;", SEQ_COL, $table, WORDID_COL, $req->query->wordid, STATUS_COL, UNACCENTED_COL);
-
+        //echo $query;
         $pdores = $pdo->query($query, PDO::FETCH_ASSOC);
         if ($pdores === false) {
             return FALSE;
@@ -77,9 +77,9 @@ function getBefore($pdo, $req, &$result, $tagJoin, $tagSeq, $order, $tagwhere, $
         $pdores = array_reverse($pdores);
         foreach($pdores as $row)
         {
-            $seq = ($req->tag_id) ? $row['seq'] : 0;
+            $seq = ($req->tag_id) ? $row[SEQ_COL] : 0;
 
-            printJSONRow($result->rows, $row['id'], $seq, array($row['word'], $row['id'], $seq), NULL);
+            printJSONRow($result->rows, $row[ID_COL], $seq, array($row[WORD_COL], $row[ID_COL], $seq), NULL);
         }
         return $numRows;
     }
@@ -111,13 +111,13 @@ function getEqualAndAfter($pdo, $req, &$result, $tagJoin, $tagSeq, $order, $tagw
             //maybe switch this to do_first and move >,< + = to do_first too?
             if ($first)
             {
-                $result->select = $row['id'];
-                $result->scroll = $row['id'];
+                $result->select = $row[ID_COL];
+                $result->scroll = $row[ID_COL];
                 $first = FALSE;
             }
-    		$seq = ($req->tag_id) ? $row['seq'] : 0;
+    		$seq = ($req->tag_id) ? $row[SEQ_COL] : 0;
 
-            printJSONRow($result->rows, $row['id'], $seq, array($row['word'], $row['id'], $seq), NULL);
+            printJSONRow($result->rows, $row[ID_COL], $seq, array($row[WORD_COL], $row[ID_COL], $seq), NULL);
     	}
 
         return $numRows;

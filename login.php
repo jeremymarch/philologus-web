@@ -18,8 +18,12 @@ function connectold(&$result)
 }
 
 function connect() {
-	//$conn = new PDO('sqlite:philolog_us.sqlite', null, null); 
-    $conn = new PDO('mysql:host=localhost;dbname=philolog_us;charset=UTF8MB4', USER, PASS);
+	if (SQLITEJWM) {
+		$conn = new PDO('sqlite:philolog_us.sqlite', null, null); 
+	}
+	else {
+    	$conn = new PDO('mysql:host=localhost;dbname=philolog_us;charset=UTF8MB4', USER, PASS);
+	}
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);  
     $conn->setAttribute(PDO::ATTR_PERSISTENT, true);
     $conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);

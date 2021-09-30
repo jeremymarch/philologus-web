@@ -16,18 +16,16 @@
       url('/newathu5_8.ttf') format('ttf');
     }
 
-    .settings {
-      position: absolute;
-      top: 49px;
-      right: 11px;
-      background-color: black;
-      height: 200px;
-      width: 250px;
-      z-index: 999;
-      border: 2px solid white;
-    }
+#hamburger {
+  background-color: white;
+  border:1px solid #666;
+  border-radius:4px;
+  cursor: pointer;
+  height:30px;
+  width:30px;
+}
 #hamburger rect {
-  fill: white;
+  fill: black;
 }
 
     .lexitem {
@@ -343,7 +341,48 @@ height: 22px;
   }
 }
 
+.settings {
+      position: absolute;
+      top: 70px;
+      right: 11px;
+      height: 200px;
+      width: 250px;
+      z-index: 999;
+    }
+
+#settingsdiv ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+#settingsdiv li {
+padding:6px 10px;
+}
+
+#settingsdiv {
+  background-color: white;
+  color:black;
+  border: 2px solid black;
+}
+
 @media (prefers-color-scheme: dark) {
+.dark #settingsdiv {
+  background-color: black;
+  color:white;
+  border: 2px solid white;
+}
+
+.dark #settingsdiv li {
+  color:white;
+}
+
+#hamburger {
+  background-color: black;
+}
+#hamburger rect {
+  fill: white;
+}
 
 .dark .lds-spinner div:after {
   background: #fff;
@@ -426,7 +465,7 @@ height: 22px;
     <div style="padding-top:18px;padding-right:10px;"><div>
 
 
-  <svg onclick="toggleSettings()" id="hamburger" style="border:1px solid #666;border-radius:4px;cursor: pointer;height:30px;width:px;" viewBox="0 0 120 120">
+  <svg onclick="toggleSettings()" id="hamburger" viewBox="0 0 120 120">
     <rect x="10" y="30" width="100" height="12"></rect>
     <rect x="10" y="56" width="100" height="12"></rect>
     <rect x="10" y="82" width="100" height="12"></rect>
@@ -968,7 +1007,6 @@ height: 22px;
   }
   
   function toggleSettings() {
-    console.log("here");
     var s = document.getElementById("settingsdiv");
     if (s && s.style.display == "block") {
       s.style.display = "none";
@@ -978,11 +1016,11 @@ height: 22px;
     }
     else
     {
-      console.log("here2");
       var s = document.createElement("div");
       s.id = "settingsdiv";
       s.classList.add("settings");
       s.style.display = "block";
+      s.innerHTML = "<ul><li>about</li><li>mobile app</li><li>configure</li><li>show history</li></ul>";
       document.body.appendChild(s);
     }
   

@@ -47,4 +47,20 @@ function getTableForLexicon($lexicon)
 	}
 }
 
+function getDefTableForLexicon($lexicon)
+{
+    if ($lexicon == "lsj")
+	{
+	    return LSJ_TABLE_DEF;
+	}
+	else if ($lexicon == "ls")
+	{
+	    return LS_TABLE_DEF;
+	}
+	else if ($lexicon == "slater")
+	{
+	    return SLATER_TABLE_DEF;
+	}
+}
+
 ?>

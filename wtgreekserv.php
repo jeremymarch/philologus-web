@@ -22,8 +22,8 @@ function getSeq($pdo, $word, $lexicon, $req)
         if ($pdores === false) {
             return FALSE;
         }
-
-		if ($pdores->rowCount() == 0) //select last seq to scroll all the way to the bottom
+        $row = $pdores->fetchAll(PDO::FETCH_BOTH);
+		if (!$row || count($row) == 0) //select last seq to scroll all the way to the bottom
 		{
 			$query = sprintf("SELECT MIN(%s) FROM %s WHERE %s = 0 LIMIT 1;", SEQ_COL, $table, STATUS_COL );
 
@@ -31,6 +31,7 @@ function getSeq($pdo, $word, $lexicon, $req)
             if ($pdores === false) {
                 return FALSE;
             }
+            $row = $pdores->fetchAll(PDO::FETCH_BOTH);
 		}
 	}
 	else
@@ -41,7 +42,8 @@ function getSeq($pdo, $word, $lexicon, $req)
         if ($pdores === false) {
             return FALSE;
         }
-        if ($pdores->rowCount() == 0) //select last seq to scroll all the way to the bottom
+        $row = $pdores->fetchAll(PDO::FETCH_BOTH);
+        if (!$row || count($row) == 0) //select last seq to scroll all the way to the bottom
         {
     		$query = sprintf("SELECT MAX(%s) FROM %s WHERE %s = 0 LIMIT 1;", SEQ_COL, $table, STATUS_COL );
 
@@ -49,12 +51,13 @@ function getSeq($pdo, $word, $lexicon, $req)
             if ($pdores === false) {
                 return FALSE;
             }
+            $row = $pdores->fetchAll(PDO::FETCH_BOTH);
         }
     }
 
-	$row = $pdores->fetch(PDO::FETCH_NUM);
+	//$row = $pdores->fetch(PDO::FETCH_NUM);
 	//echo "def" . $row[0];
-	return $row[0];
+	return $row[0][0];
 }
 
 function getBefore($pdo, $req, &$result, $tagJoin, $tagSeq, $order, $tagwhere, $middleSeq)
@@ -66,15 +69,17 @@ function getBefore($pdo, $req, &$result, $tagJoin, $tagSeq, $order, $tagwhere, $
     $pdores = $pdo->query($query, PDO::FETCH_ASSOC);
     if ($pdores !== false) 
     {
-        $numRows = $pdores->rowCount();
-    	if ($numRows < $req->limit)
-    		$result->lastPageUp = 1;
-    	else
-    		$result->lastPageUp = 0;
-
-        //get rows in reverse order
         $pdores = $pdores->fetchAll();
-        $pdores = array_reverse($pdores);
+
+        $numRows = count($pdores);
+    	if ($numRows < $req->limit) {
+    		$result->lastPageUp = 1;
+        }
+    	else {
+    		$result->lastPageUp = 0;
+        }
+
+        $pdores = array_reverse($pdores); //get rows in reverse order
         foreach($pdores as $row)
         {
             $seq = ($req->tag_id) ? $row[SEQ_COL] : 0;
@@ -97,11 +102,15 @@ function getEqualAndAfter($pdo, $req, &$result, $tagJoin, $tagSeq, $order, $tagw
     $pdores = $pdo->query($query, PDO::FETCH_ASSOC);
     if ($pdores !== false) 
     {
-    	$numRows = $pdores->rowCount();
-    	if ($numRows < $req->limit)
+    	$pdores = $pdores->fetchAll();
+
+        $numRows = count($pdores);
+    	if ($numRows < $req->limit) {
     		$result->lastPage = 1;
-    	else
+        }
+    	else {
     		$result->lastPage = 0;
+        }
 
         $first = TRUE;
 

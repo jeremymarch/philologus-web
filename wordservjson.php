@@ -66,7 +66,7 @@ function getWord($id, $wordid, $lexicon, $skipCache, $addWordLinks, $requestTime
 
 	$agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : "";
 	
-	$lexiconTable = getTableForLexicon($lexicon);
+	$lexiconTable = getDefTableForLexicon($lexicon);
 	
 	$ip = $_SERVER['REMOTE_ADDR'];
 

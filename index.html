@@ -980,7 +980,7 @@ padding:6px 10px;
     else {
           var expires = "";
       }
-    document.cookie = name + "=" + value + expires + "; path=/";
+    document.cookie = name + "=" + value + expires + "; path=/; SameSite=Strict";
   }
   
   function getCookie(name)

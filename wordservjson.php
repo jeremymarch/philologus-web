@@ -66,7 +66,7 @@ function getWord($id, $wordid, $lexicon, $skipCache, $addWordLinks, $requestTime
 
 	$agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : "";
 	
-	$lexiconTable = getDefTableForLexicon($lexicon);
+	$lexiconTable = getTableForLexicon($lexicon);
 	
 	$ip = $_SERVER['REMOTE_ADDR'];
 
@@ -80,12 +80,12 @@ function getWord($id, $wordid, $lexicon, $skipCache, $addWordLinks, $requestTime
 		//$id = "@WORDID";
 	}
 	*/
-	$query .= sprintf("SELECT a.id,a.wordid,a.word,a.unaccented_word,a.htmlDef2,a.status %s FROM %s a %s WHERE a.id=%s LIMIT 1;", ($isLSJ) ? ",b.present,b.future,b.aorist,b.perfect,b.perfmid,b.aoristpass,b.usePP " : "", $lexiconTable, ($isLSJ) ? " LEFT JOIN greek_verbs b ON a.id=b.id-1 " : "", $id);
-
+	$query .= sprintf("SELECT a.%s,a.%s,a.%s,a.%s,a.%s %s FROM %s a %s WHERE a.%s=%s LIMIT 1;", ID_COL,WORDID_COL,WORD_COL,UNACCENTED_COL,DEF_COL,($isLSJ) ? ",b.present,b.future,b.aorist,b.perfect,b.perfmid,b.aoristpass,b.usePP " : "", $lexiconTable, ($isLSJ) ? " LEFT JOIN greek_verbs b ON a.id=b.id-1 " : "", ID_COL,$id);
+	//echo $query;
 	//$query .= sprintf("INSERT INTO log VALUES (NULL,NULL,%s,%s,'%s','%s');", $l, $id, $ip, $agent);
 
     $pdores = $conn->query($query, PDO::FETCH_ASSOC);
-    if ($pdores === false || $pdores->rowCount() < 1) {
+    if ($pdores === false) {
         $defError = 3;
     }
     else {
@@ -127,7 +127,7 @@ function getWord($id, $wordid, $lexicon, $skipCache, $addWordLinks, $requestTime
 		return '{"error":"Could not find word."}';
 	}
 	*/
-	$def = $word['htmlDef2'];
+	$def = $word[DEF_COL];
 
 	if ($isLSJ && $word['usePP'] == 1)
 	{
@@ -164,14 +164,14 @@ function getWord($id, $wordid, $lexicon, $skipCache, $addWordLinks, $requestTime
 	$json->principalParts = (isset($pps)) ? $pps : "";
 	$json->def = trim($def2);
 	$json->defName = $defname;
-	$json->word = trim($word['word']);
-	$json->unaccentedWord = trim($word['unaccented_word']);
-	$json->lemma = trim($word['word']);
+	$json->word = trim($word[WORD_COL]);
+	$json->unaccentedWord = trim($word[UNACCENTED_COL]);
+	$json->lemma = trim($word[WORD_COL]);
 	$json->requestTime = $requestTime;
-	$json->status = trim($word['status']);
+	$json->status = "0";//trim($word[STATUS_COL]);
 	$json->lexicon = $lexicon;
-	$json->word_id = $word['id'];
-	$json->wordid = $word['wordid'];
+	$json->word_id = $word[ID_COL];
+	$json->wordid = $word[UNACCENTED_COL];
 	$json->method = "setWord";
 
 	return json_encode($json, JSON_UNESCAPED_UNICODE);

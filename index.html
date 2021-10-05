@@ -8,6 +8,12 @@
   <title>philolog.us</title>
   <meta name="description" content="Philologus is a fast, streamlined interface to the online Greek and Latin lexica hosted by the Perseus Project." />
   <meta name="keywords" content="Liddell Scott and Jones, Lewis and Short, Slater's Lexicon to Pindar, Perseus Project, Greek, Classical Greek, Ancient Greek, Latin, lexica, lexicon, dictionary, dendrea.org" />
+  <script>
+    var mode = localStorage.getItem("mode"); //use mode to override system dark mode
+    if ((window.matchMedia( "(prefers-color-scheme: dark)" ).matches || mode == "dark") && mode != "light") {
+      document.querySelector("HTML").classList.add("dark");
+    }
+  </script>
   <style>
     @font-face {
       font-family: 'WebNewAthenaUnicode';
@@ -15,6 +21,22 @@
       url('/newathu5_8.woff') format('woff'),
       url('/newathu5_8.ttf') format('ttf');
     }
+
+  :root {
+      --author-style: red;
+      --bib-color: green;
+      --ref-color: orange;
+      --gloss-color: black;
+      --foreign-color: blue;
+      --quote-color: blue;
+
+      --author-weight: normal;
+      --bib-weight: normal;
+      --ref-weight: normal;
+      --gloss-weight: bold;
+      --foreign-weight: normal;
+      --quote-weight: normal;
+  }
 
 #hamburger {
   background-color: white;
@@ -366,7 +388,7 @@ padding:6px 10px;
   border: 2px solid black;
 }
 
-@media (prefers-color-scheme: dark) {
+
 .dark #settingsdiv {
   background-color: black;
   color:white;
@@ -392,7 +414,7 @@ padding:6px 10px;
       color: white;
     }
 
-  .dark.philbody {
+  .dark .philbody {
     background-color:black;
   }
 
@@ -427,11 +449,11 @@ padding:6px 10px;
   .dark .blacktext { color: black; }
   .dark .defbody { color: white; }
   .dark .attrlink { color: #03a5fc; }
-}
+
   </style>
 </head>
 
-<body onload="start();" class="philbody dark">
+<body onload="start();" class="philbody">
 
   <div id="taglist" style="position:absolute;top:0px;left:0px;height:50%;width:220px;display:none;"></div>
   <div id="historylist" style="position:absolute;top:50%;left:0px;height:50%;width:220px;display:none;"></div>
@@ -972,6 +994,11 @@ padding:6px 10px;
   
   function setCookie(name, value, days) 
   {
+    if (typeof(localStorage) != "undefined") {
+      localStorage.setItem(name, value);
+    }
+    
+    /*
     if (days) {
       var date = new Date();
       date.setTime(date.getTime() + (days*24*60*60*1000));
@@ -981,10 +1008,17 @@ padding:6px 10px;
           var expires = "";
       }
     document.cookie = name + "=" + value + expires + "; path=/; SameSite=Strict";
+    */
   }
   
   function getCookie(name)
   {
+    if (typeof(localStorage) != "undefined") {
+      var value = localStorage.getItem(name);
+      console.log("localstorage: " + name + ": " + value);
+      return value;
+    }
+    /*
     var nameEQ = name + "=";
     var ca = document.cookie.split(';');
   
@@ -997,8 +1031,9 @@ padding:6px 10px;
   
       if (c.indexOf(nameEQ) == 0) 
         return c.substring(nameEQ.length, c.length);
-    }
+    } */
     return null;
+    
   }
   
   function eraseCookie(name) 

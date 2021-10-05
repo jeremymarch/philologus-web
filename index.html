@@ -23,12 +23,16 @@
     }
 
   :root {
-      --author-style: red;
+      --author-color: red;
       --bib-color: green;
       --ref-color: orange;
       --gloss-color: black;
       --foreign-color: blue;
       --quote-color: blue;
+      --foreign-color-dark: #03a5fc;
+      --quote-color-dark: #03a5fc;
+      --attr-color:blue;
+      --attr-color-dark:#03a5fc;
 
       --author-weight: normal;
       --bib-weight: normal;
@@ -37,6 +41,42 @@
       --foreign-weight: normal;
       --quote-weight: normal;
   }
+/* document.documentElement.style.setProperty("--author-color", "green"); */
+
+.dark .fo {color:blue; color: var(--foreign-color-dark,blue);}
+.dark .qu {color:blue; color: var(--quote-color-dark,blue);}
+.fo {color:blue; color: var(--foreign-color,blue);}
+.qu {color:blue; color: var(--quote-color,blue);}
+.tr {font-weight:bold;}
+.au {color:red; color: var(--author-color,red);}
+.bi {color:green; color: var(--bib-color,green);}
+.ti {color:orange; color: var(--ref-color,orange);}
+.biblLink {color:green; color: var(--bib-color,green);}
+.attrlink { color: blue; color: var(--attr-color, blue); }
+.dark .attrlink { color: #03a5fc; color: var(--attr-color-dark, #03a5fc); }
+.dark .defbody { color: white; }
+
+.qu:before {
+  content: '\"';
+}
+
+.qu:after {
+  content: '\"';
+}
+
+.label {
+  font-weight: bold;
+  position: absolute;
+  left: -36px;
+}
+
+.label:after {
+  content: ' ';
+}
+
+.orth {
+  font-weight: bold;
+}
 
 #hamburger {
   background-color: white;
@@ -137,49 +177,6 @@
     .body {
       line-height: 1.2;
       margin: 8px 0px
-    }
-
-    /*
-.fo {color:blue;}
-.qu {color:blue;}
-.tr {font-weight:bold;}
-.au {color:red;}
-.bi {color:green;}
-.ti {color:orange;}
-*/
-
-    .fo {}
-
-    .qu {}
-
-    .tr {}
-
-    .au {}
-
-    .bi {}
-
-    .ti {}
-
-    .qu:before {
-      content: '\"';
-    }
-
-    .qu:after {
-      content: '\"';
-    }
-
-    .label {
-      font-weight: bold;
-      position: absolute;
-      left: -36px;
-    }
-
-    .label:after {
-      content: ' ';
-    }
-
-    .orth {
-      font-weight: bold;
     }
 
     body,
@@ -440,16 +437,6 @@ padding:6px 10px;
   border: 2px solid white;
   color: white;
 }
-
-  .dark .orangetext { color: orange; }
-  .dark .greentext { color: green; }
-  .dark .bluetext { color: #03a5fc; }
-  .dark .redtext { color: red; }
-  .dark .boldtext { font-weight: bold; }
-  .dark .blacktext { color: black; }
-  .dark .defbody { color: white; }
-  .dark .attrlink { color: #03a5fc; }
-
   </style>
 </head>
 

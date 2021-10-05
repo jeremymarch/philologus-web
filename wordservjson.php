@@ -2,7 +2,7 @@
 /* αβγ */
 
 require("login.php");
-
+/*
 function restyleDef($def)
 {
 	if (isset($_COOKIE["filter"]))
@@ -31,7 +31,7 @@ function restyleDef($def)
 		return $def;
 	}
 }
-
+*/
 function getWord($id, $wordid, $lexicon, $skipCache, $addWordLinks, $requestTime)
 {
 	$def = "";
@@ -143,7 +143,7 @@ function getWord($id, $wordid, $lexicon, $skipCache, $addWordLinks, $requestTime
 		$pps = $present  . ", " . $future . ", " . $aorist . ", " . $perfect . ", " . $perfmid . ", " . $aoristpass;
 	}
 
-	$def2 = restyleDef($def);
+	$def2 = $def;//restyleDef($def);
 
 	if (!$requestTime)
 	{

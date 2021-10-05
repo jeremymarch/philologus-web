@@ -8,24 +8,15 @@ define("SQLITEJWM", FALSE);
 if (SQLITEJWM) {
     define("LSJ_TABLE", "ZGREEK");
     define("LS_TABLE", "ZLATIN");
-    //define("LSJ_TABLE_DEF", "ZGREEKDEFS");
-    //define("LS_TABLE_DEF", "ZLATINDEFS");
     define("SLATER_TABLE", "ZSLATER");
-    //define("SLATER_TABLE_DEF", "slater");
 
-    define("ID_COL", "seq");//"Z_PK");
+    define("ID_COL", "seq");
     define("WORDID_COL", "sortword");
     define("WORD_COL", "word");
     define("SEQ_COL", "seq");
     define("STATUS_COL", "0"); //fake it for now
     define("UNACCENTED_COL", "sortword");
     define("DEF_COL", "def");
-    /*
-    define("ID_COL_DEF", "");
-    define("ID_COL_DEF", "");
-    define("ID_COL_DEF", "");
-    define("ID_COL_DEF", "");
-    */
 }
 /*if (SQLITEJWM) {
     define("LSJ_TABLE", "ZGREEKWORDS");

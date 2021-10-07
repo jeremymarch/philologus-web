@@ -263,7 +263,18 @@ function refreshHistory() {
     w4.refresh();
 }
 
+
 function loadXMLDoc(url) {
+
+    microAjax({
+      url: url,
+      method: "GET",
+      success: setWord,
+      warning: null,
+      error: null
+    });
+
+/*
   $.ajax({
     url: url,
     type: "GET",
@@ -284,6 +295,7 @@ function loadXMLDoc(url) {
       loadXMLDoc(url); //redo request on error
     }
   });
+  */
 }
 
 function defview(node) {

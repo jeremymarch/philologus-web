@@ -437,6 +437,10 @@ padding:6px 10px;
   border: 2px solid white;
   color: white;
 }
+
+#topmenu {
+  visibility: hidden;
+}
   </style>
 </head>
 
@@ -465,7 +469,7 @@ padding:6px 10px;
     </div>
   </div>
 
-  <div id="defbody" class="defbody" style="border-radius:14px;position:relative;z-index:1;top:50px;margin-left:280px;margin-right:280px;overflow:hidden;text-align:left;">
+  <div id="defbody" class="defbody" style="border-radius:14px;position:relative;z-index:1;top:50px;margin-left:280px;margin-right:0px;overflow:hidden;height:100%;text-align:left;">
     <div id="lsjdef" style="position:relative;z-index:2;margin:0px;padding:10px;overflow:auto;height:0px;"></div>
   </div>
 
@@ -500,10 +504,49 @@ padding:6px 10px;
     } catch(err) {}
     */
   </script>
-    <script type="text/javascript" src="jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="wordtree.js?v20"></script>
     <script type="text/javascript" src="defjson.js?v24"></script>
     <script type="text/javascript">
+
+       //https://github.com/le717/microajax
+       function microAjax(options) {
+      "use strict";
+
+      // Default to GET
+      if (!options.method) {
+        options.method = "GET";
+      }
+
+      // Default empty functions for the callbacks
+      function noop() {}
+      if (!options.success) {
+        options.success = noop;
+      }
+      if (!options.warning) {
+        options.warning = noop;
+      }
+      if (!options.error) {
+        options.error = noop;
+      }
+
+      var request = new XMLHttpRequest();
+      request.open(options.method, options.url, true);
+      request.send(options.data);
+
+      request.onload = function() {
+        // Success!
+        if (request.readyState === 4 && request.status === 200) {
+          options.success(request.responseText);
+
+          // We reached our target destination, but it returned an error
+        } else {
+          options.warning();
+        }
+      };
+
+      // There was a connection error of some sort
+      request.onerror = options.error;
+    }
   
       function addEvent(evnt, elem, func) {
         if (elem.addEventListener)
@@ -816,7 +859,7 @@ padding:6px 10px;
         //reset after querying
         w.params.wordid = "";
         delete w.params.wordid;
-        $(window).resize(onResize); //window.onresize = onResize;
+        window.onresize = onResize; //$(window).resize(onResize); 
   
         if (platform == "mac" || platform == "ipad" || platform == "iphone") {
           document.getElementsByTagName("body")[0].style.fontFamily = "NewAthenaUnicode,WebNewAthenaUnicode,helvetica,san-serif"; //because ie6 won't display unicode font if this is in the body
@@ -1042,7 +1085,7 @@ padding:6px 10px;
       s.id = "settingsdiv";
       s.classList.add("settings");
       s.style.display = "block";
-      s.innerHTML = "<ul><li>about</li><li>mobile app</li><li>configure</li><li>show history</li></ul>";
+      s.innerHTML = "<ul><li><a href='javascript:contact()' class='menulink'>about</a></li><li><a href='javascript:showiPhone()' class='menulink'>mobile app</a></li><li><a href='javascript:config()' class='menulink'>configure</a></li><li><a href='javascript:toggleHistoryChooser()' class='menulink'>show history</a></li></ul>";
       document.body.appendChild(s);
     }
   

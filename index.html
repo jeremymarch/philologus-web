@@ -9,10 +9,16 @@
   <meta name="description" content="Philologus is a fast, streamlined interface to the online Greek and Latin lexica hosted by the Perseus Project." />
   <meta name="keywords" content="Liddell Scott and Jones, Lewis and Short, Slater's Lexicon to Pindar, Perseus Project, Greek, Classical Greek, Ancient Greek, Latin, lexica, lexicon, dictionary, dendrea.org" />
   <script>
-    var mode = localStorage.getItem("mode"); //use mode to override system dark mode
-    if ((window.matchMedia( "(prefers-color-scheme: dark)" ).matches || mode == "dark") && mode != "light") {
-      document.querySelector("HTML").classList.add("dark");
+    function setTheme() {
+      var mode = localStorage.getItem("mode"); //use mode to override system dark mode
+      if ((window.matchMedia( "(prefers-color-scheme: dark)" ).matches || mode == "dark") && mode != "light") {
+        document.querySelector("HTML").classList.add("dark");
+      }
+      else {
+        document.querySelector("HTML").classList.remove("dark");
+      }
     }
+    setTheme();
   </script>
   <style>
     @font-face {
@@ -1085,11 +1091,26 @@ padding:6px 10px;
       s.id = "settingsdiv";
       s.classList.add("settings");
       s.style.display = "block";
-      s.innerHTML = "<ul><li><a href='javascript:contact()' class='menulink'>about</a></li><li><a href='javascript:showiPhone()' class='menulink'>mobile app</a></li><li><a href='javascript:config()' class='menulink'>configure</a></li><li><a href='javascript:toggleHistoryChooser()' class='menulink'>show history</a></li></ul>";
+      s.innerHTML = "<ul><li><a href='javascript:contact()' class='menulink'>about</a></li><li><a href='javascript:showiPhone()' class='menulink'>mobile app</a></li><li><a href='javascript:config()' class='menulink'>configure</a></li><li><a href='javascript:toggleHistoryChooser()' class='menulink'>show history</a></li><li>dark mode: <div style='text-align:right;float:right;padding-right:5px;'>system <input type='radio' name='darkmode' onclick='darkModeClick(this);' value='system'/><br>dark <input type='radio' name='darkmode' onclick='darkModeClick(this);' value='dark'/><br>light<input type='radio' name='darkmode' onclick='darkModeClick(this);' value='light'/></div></li></ul>";
       document.body.appendChild(s);
     }
   
   }
+
+function darkModeClick(radio) {
+  switch (radio.value) {
+    case "dark":
+      localStorage.setItem("mode", "dark");
+      break;
+    case "light":
+      localStorage.setItem("mode", "light");
+      break;
+    default:
+      localStorage.removeItem("mode");
+      break;
+  }
+  setTheme();
+}
   
       var tagsOpen = false;
       var vIsLoggedIn = false;

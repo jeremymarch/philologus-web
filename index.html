@@ -389,6 +389,7 @@ padding:6px 10px;
   background-color: white;
   color:black;
   border: 2px solid black;
+  border-radius:10px;
 }
 
 
@@ -446,6 +447,15 @@ padding:6px 10px;
 
 #topmenu {
   visibility: hidden;
+}
+
+#backdrop {
+  position: absolute;
+  top:0px;
+  left:0px;
+  width:100%;
+  height:100%;
+  z-index:900;
 }
   </style>
 </head>
@@ -657,7 +667,7 @@ padding:6px 10px;
         w4.conTopOffset = 38;
         w4.con.style.top = w4.conTopOffset + "px";
         w4.setHeight(w4.height);
-        w4.div.style.zIndex = 997;
+        w4.div.style.zIndex = 800;
   
         w4.div.style.borderRadius = "14px";
         w4.div.style.margin = "10px";
@@ -1085,12 +1095,21 @@ padding:6px 10px;
       s.classList.add("settings");
       s.style.display = "block";
       s.innerHTML = "<ul><li><a href='javascript:contact()' class='menulink'>about</a></li><li><a href='javascript:showiPhone()' class='menulink'>mobile app</a></li><li><a href='javascript:config()' class='menulink'>configure</a></li><li><a href='javascript:toggleHistoryChooser()' class='menulink'>show history</a></li><li>dark mode: <div style='text-align:right;float:right;padding-right:5px;'>system <input id='darkModeSystem' type='radio' name='darkmode' onclick='darkModeClick(this);' value='system'/><br>dark <input id='darkModeDark' type='radio' name='darkmode' onclick='darkModeClick(this);' value='dark'/><br>light<input id='darkModeLight' type='radio' name='darkmode' onclick='darkModeClick(this);' value='light'/></div></li></ul>";
+      var c = document.createElement("div");
+      c.id="backdrop";
+      c.onclick = function() {
+        document.querySelector("#backdrop").style.display = "none";
+        toggleSettings();
+      };
+      document.body.appendChild(c);
       document.body.appendChild(s);
     }
     else if (s.style.display == "block") {
+      document.querySelector("#backdrop").style.display = "none";
       s.style.display = "none";
     }
     else {
+      document.querySelector("#backdrop").style.display = "block";
       s.style.display = "block";
     }
 

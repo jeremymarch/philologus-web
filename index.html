@@ -62,6 +62,14 @@
 .dark .attrlink { color: #03a5fc; color: var(--attr-color-dark, #03a5fc); }
 .dark .defbody { color: white; }
 
+.storelink {
+  color:blue;
+}
+
+.dark .storelink {
+  color:#03a5fc;
+}
+
 .qu:before {
   content: '\"';
 }
@@ -408,6 +416,13 @@ height: 22px;
   }
 }
 
+#settingsdiv ul {
+  list-style-type: none;
+  margin: 0px;
+  padding: 0px;
+  text-align: left;
+}
+
 .settings {
       position: absolute;
       top: 70px;
@@ -418,19 +433,13 @@ height: 22px;
       padding:10px;
     }
 
-#settingsdiv ul {
-  list-style-type: none;
-  margin: 0px;
-  padding: 0px;
-  text-align: left;
-}
-
 #settingsdiv {
   background-color: white;
   color:black;
   border: 2px solid black;
   border-radius:10px;
 }
+
 
 
 .dark #settingsdiv {
@@ -982,13 +991,13 @@ height: 22px;
   
       function contact() {
         var about =
-          "Philolog.us was first launched in June 2005 shortly after the <a href='www.perseus.tufts.edu'>Perseus Project</a> began offering access to its collections via web services. One of the primary aims has been to offer a streamlined, user-friendly interface to the lexica in the Perseus library.<br/><br/>Upcoming features include hierarchical trees of Greek words based on their etymology and the ability for users to create custom lists of words.<br/><br/>Design goals:<ul><li>a clean, unintrusive user-interface which lets the content be the focus</li><li>completely cross-platform access, available anywhere in the world</li><li>bringing the benefits of the digital age to resources previously limited by the print age</li><li>the ability to manipulate data for both convenience and perspicacity</li></ul>I welcome your questions and comments.<br/><br/>Jeremy March<br/><a href='mailto:jmarch@gradcenter.cuny.edu'>jmarch@gradcenter.cuny.edu</a>";
+          "Philolog.us was first launched in June 2005 shortly after the <a class='storelink' href='www.perseus.tufts.edu'>Perseus Project</a> began offering access to its collections via web services. One of the primary aims has been to offer a streamlined, user-friendly interface to the lexica in the Perseus library.<br/><br/>Upcoming features include hierarchical trees of Greek words based on their etymology and the ability for users to create custom lists of words.<br/><br/>Design goals:<ul><li>a clean, unintrusive user-interface which lets the content be the focus</li><li>completely cross-platform access, available anywhere in the world</li><li>bringing the benefits of the digital age to resources previously limited by the print age</li><li>the ability to manipulate data for both convenience and perspicacity</li></ul>I welcome your questions and comments.<br/><br/>Jeremy March<br/><a class='storelink' href='mailto:jmarch@gradcenter.cuny.edu'>jmarch@gradcenter.cuny.edu</a>";
   
         document.getElementById("lsjdef").innerHTML = "<div style='text-align:left;'>" + about + "</div>";
       }
   
       function showiPhone() {
-        var news = "Available as an iPhone/iPad app in <a href='https://itunes.apple.com/us/app/philolog.us/id622324932?mt=8' style='color:blue;'>Apple's App store</a>.<br><br><br>Now available for Android in the <a href='https://play.google.com/store/apps/details?id=com.philolog.philologus&hl=en' style='color:blue;'>Google Play store</a>.";
+        var news = "Available as an iPhone/iPad app in <a href='https://itunes.apple.com/us/app/philolog.us/id622324932?mt=8' class='storelink'>Apple's App store</a>.<br><br><br>Now available for Android in the <a href='https://play.google.com/store/apps/details?id=com.philolog.philologus&hl=en' class='storelink'>Google Play store</a>.";
         document.getElementById("lsjdef").innerHTML = "<div style='text-align:center;font-size:16pt;padding-top:60px;'>" + news + "</div>";
   
       }

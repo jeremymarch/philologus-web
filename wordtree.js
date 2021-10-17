@@ -125,7 +125,7 @@ function wordtree (idPrefix, width, height)
     this.step = 1;
     
     //whether to automatically focus the entry when wt "has focus", disable for iphones, ipads, etc.
-    if (platform == "ipad" || platform == "iphone")
+    if (platform == "ipad" || platform == "iphone" || (navigator.maxTouchPoints && navigator.maxTouchPoints > 1))
     	this.autofocus = false;
     else
 		this.autofocus = true; 

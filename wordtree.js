@@ -107,7 +107,7 @@ function wordtree (idPrefix, width, height)
     this.lastRequestTime = null;
     this.lastKeyTimeout = null;
     this.indentWidth = 15; //for tree branches
-    this.conTopOffset = 72;
+    this.conTopOffset = 79;
     
     /*
     At first we were using the system default rate for scrolling when
@@ -166,8 +166,8 @@ function wordtree (idPrefix, width, height)
 	var input = document.createElement("input");
 	input.style.width = this.width - 76 + "px";
     input.style.position = "absolute";
-    input.style.top = "40px";
-    input.style.left = "14px";
+    input.style.top = "42px";
+    input.style.left = "12px";
 	input.setAttribute("autocomplete", "off");
 	input.setAttribute("autocorrect", "off");
 	input.setAttribute("autocapitalize", "off");
@@ -326,7 +326,7 @@ function wordtree (idPrefix, width, height)
     {
         this.height = height;
         this.div.style.height = (height - 7) + "px";
-        this.con.style.height = (height - 21 - this.conTopOffset) + "px";
+        this.con.style.height = (height - 22 - this.conTopOffset) + "px";
     }
 
     function setWidth(width)

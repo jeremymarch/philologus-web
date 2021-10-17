@@ -27,6 +27,10 @@
       url('/newathu5_8.woff') format('woff'),
       url('/newathu5_8.ttf') format('ttf');
     }
+  .wordtree input {
+    font-family:helvetica, arial;/*WebNewAthenaUnicode;*/
+    font-size:11pt;
+  }
 
   :root {
       --author-color: red;
@@ -513,7 +517,7 @@ height: 22px;
 
   <div id="taglist" style="position:absolute;top:0px;left:0px;height:50%;width:220px;display:none;"></div>
   <div id="historylist" style="position:absolute;top:50%;left:0px;height:50%;width:220px;display:none;"></div>
-  <div id="leftlist" style="position:absolute;top:0px;left:0px;height:100%;width:220px;"></div>
+  <div id="leftlist" style="position:absolute;top:0px;left:0px;height:cals(100% - 20px);width:259px;margin:0px"></div>
   <!--<div id="openHistory">History</div>-->
   <div id="rightlist" style="position:absolute;top:69px;right:20px;width:260px;height:500px;">
     <!--<div style="border:1px solid black;margin-top:40px;padding:5px;text-align:left;" id="message1">The site has been updated with new code and data.  Please report any problems you might have with the update to <a href="mailto:jmarch@gradcenter.cuny.edu">jmarch@gradcenter.cuny.edu</a>.  The previous version is available <a href="http://philolog.us/v1">here</a> if you need it.<br><br><div style="width:100%;text-align:center;"><a href="javascript:closeMessage()">close</a></div></div>
@@ -569,7 +573,7 @@ height: 22px;
     } catch(err) {}
     */
   </script>
-    <script type="text/javascript" src="wordtree.js?v21"></script>
+    <script type="text/javascript" src="wordtree.js?v24"></script>
     <script type="text/javascript" src="defjson.js?v25"></script>
     <script type="text/javascript">
 
@@ -828,6 +832,8 @@ height: 22px;
       document.onkeyup = globalKeyUp;
   
       function start() {
+        var isTouchDevice = (navigator.maxTouchPoints && navigator.maxTouchPoints > 1);
+        console.log("is touch: " + isTouchDevice + ": " + navigator.maxTouchPoints + ", " + navigator.maxTouchPoints);
         var ee = window.location.pathname;
         var m = ee.match(/\/(lsj|ls|slater)\/?([^\/]*)\/?$/);
   
